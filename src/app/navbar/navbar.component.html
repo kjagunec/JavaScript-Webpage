@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-md bg-primary-subtle sticky-top">
+  <div class="container-md">
+    <a class="navbar-brand" [routerLink]="['']">
+      <img style="max-height: 100px; min-height: 50px" class="img-fluid" src="../../assets/milk.png" alt="Milk image">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mb-2 mb-md-0 w-100 justify-content-evenly">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" [routerLink]="['']">Početna</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['about']">O nama</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Proizvodi
+          </a>
+          <ul class="dropdown-menu bg-primary-subtle">
+            <li><a class="dropdown-item" href="#">Mlijeko</a></li>
+            <li><a class="dropdown-item" href="#">Vrhnja</a></li>
+            <li><a class="dropdown-item" href="#">Maslac, kajmaci i namazi</a></li>
+            <li><a class="dropdown-item" href="#">Sirutka i mlaćenica</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Novosti</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Kontakt</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
