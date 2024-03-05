@@ -7,8 +7,10 @@ import {HttpClient} from "@angular/common/http";
 })
 export class DataService {
 
-  apiRootPosts = environment.API_URL + '/api/posts';
-  apiRootUsers = environment.API_URL + '/api/users';
+  apiRootUsers : string = environment.API_URL + '/api/users';
+  apiRootPosts : string = environment.API_URL + '/api/posts';
+  apiRootCategories : string = environment.API_URL + '/api/users';
+  apiRootProducts : string = environment.API_URL + '/api/categories';
 
   constructor(private http : HttpClient) { }
 
