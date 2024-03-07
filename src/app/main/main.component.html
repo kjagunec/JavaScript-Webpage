@@ -1,29 +1,18 @@
 <section class="container-md border-bottom pb-3">
   <h1 class="text-center my-5">Novosti</h1>
   <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2">
-    <article class="col">
+    <article class="col" *ngFor="let p of posts">
       <div class="card border-0">
-        <a [routerLink]="['post']">
-          <img src="https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/20_I06.png" class="card-img-top" alt="stock photo">
+        <a routerLink="/post/{{p.id}}">
+          <img src="{{p.picture}}" class="card-img-top" alt="stock photo">
         </a>
         <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <h5 class="card-title">{{p.title}}</h5>
+          <p class="card-text">{{p.text}}</p>
         </div>
       </div>
     </article>
-    <article class="col">
-      <div class="card border-0">
-        <a href="/">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-        </a>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        </div>
-      </div>
-    </article>
-    <article class="col">
+    <!--<article class="col">
       <div class="card border-0">
         <a href="/">
           <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
@@ -45,6 +34,17 @@
         </div>
       </div>
     </article>
+    <article class="col">
+      <div class="card border-0">
+        <a href="/">
+          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        </div>
+      </div>
+    </article>-->
   </div>
 </section>
 <section class="container-md border-bottom pb-3">

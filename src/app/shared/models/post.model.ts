@@ -1,5 +1,6 @@
 export class Post {
   id : number = 0;
-  header : string = "";
+  picture : string = "";
+  title : string = "";
   text : string = "";
 }
