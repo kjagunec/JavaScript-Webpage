@@ -55,8 +55,12 @@
 <section class="container-md border-bottom pb-3">
   <h1 class="text-center my-5">Proizvodi</h1>
   <div class="btn-group d-flex mb-4" role="group">
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio1">Mlijeko</label>
+    @for (category of categories; track category; let index = $index) {
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio{{index}}" autocomplete="off">
+      <label class="btn btn-outline-primary" for="btnradio{{index}}">{{category}}</label>
+    }
+    <!--<input *ngFor="let category of categories; index as i" type="radio" class="btn-check" name="btnradio" id="btnradio{{i}}" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio{{i}}">{{category}}</label>
 
     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradio2">Vrhnja</label>
@@ -68,22 +72,22 @@
     <label class="btn btn-outline-primary" for="btnradio4">Sirutka i mlaćenica</label>
 
     <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio5">Svi proizvodi</label>
+    <label class="btn btn-outline-primary" for="btnradio5">Svi proizvodi</label>-->
   </div>
   <div id="carousel" class="carousel slide w-25 mx-auto">
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="https://picsum.photos/400" class="d-block w-100" alt="...">
-        <p class="carousel-caption d-none d-md-block bg-secondary bg-opacity-50">Jogurt</p>
+      <div *ngFor="let product of products; let first = first" [ngClass]="first ? 'active' : ''" class="carousel-item">
+        <img src="{{product.picture}}" class="d-block w-100" alt="...">
+        <p class="carousel-caption d-none d-md-block bg-secondary bg-opacity-50">{{product.name}}</p>
       </div>
-      <div class="carousel-item">
+      <!--<div class="carousel-item">
         <img src="https://picsum.photos/400" class="d-block w-100" alt="...">
         <p class="carousel-caption d-none d-md-block bg-secondary bg-opacity-50">Mlijeko</p>
       </div>
       <div class="carousel-item">
         <img src="https://picsum.photos/400" class="d-block w-100" alt="...">
         <p class="carousel-caption d-none d-md-block bg-secondary bg-opacity-50">Sir :)</p>
-      </div>
+      </div>-->
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>

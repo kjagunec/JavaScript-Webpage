@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Post} from "../shared/models/post.model";
+import {Product} from "../shared/models/product.model";
 
 @Component({
   selector: 'app-main',
@@ -9,12 +10,14 @@ import {Post} from "../shared/models/post.model";
 export class MainComponent implements OnInit {
 
   posts : Post[] = [];
+  categories : string[] = [];
+  products : Product[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.posts = [];
     let post : Post = new Post();
+    let product : Product = new Product();
 
     post.id = 1;
     post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/21_I15.png";
@@ -35,6 +38,26 @@ export class MainComponent implements OnInit {
     post.title = "Title3";
     post.text = "text3";
     this.posts.push(post);
+
+    this.categories.push("Mlijeko");
+    this.categories.push("Vrhnja");
+    this.categories.push("Maslac, kajmaci i namazi");
+    this.categories.push("Sirutka i mlaćenica");
+    this.categories.push("Svi proizvodi");
+
+    product.name = "Jogurt";
+    product.picture = "https://static5.depositphotos.com/1016154/461/i/950/depositphotos_4616605-stock-photo-yogurt.jpg";
+    this.products.push(product);
+
+    product = new Product();
+    product.name = "Mlijeko";
+    product.picture = "https://media.gettyimages.com/id/594838587/photo/glass-of-milk.jpg?s=2048x2048&w=gi&k=20&c=kp71uhU_Uenr2Ox8k0c630pNqw-M6Bp3DnAvw_fl3o4=";
+    this.products.push(product);
+
+    product = new Product();
+    product.name = "Sir";
+    product.picture = "https://media.gettyimages.com/id/859268416/photo/cheese-chunk-isolated-on-white-background.jpg?s=2048x2048&w=gi&k=20&c=eJE-0duhWEh2THMUc2Pw7jUmOMl2fn-4g3ZXb0KlJFI=";
+    this.products.push(product);
   }
 
 }
