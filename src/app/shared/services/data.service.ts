@@ -11,10 +11,10 @@ import {User} from "../models/user.model";
 })
 export class DataService {
 
-  apiRootUsers : string = environment.API_URL + '/api/users';
-  apiRootPosts : string = environment.API_URL + '/api/posts';
-  apiRootCategories : string = environment.API_URL + '/api/users';
-  apiRootProducts : string = environment.API_URL + '/api/categories';
+  private apiRootUsers : string = environment.API_URL + '/api/users';
+  private apiRootPosts : string = environment.API_URL + '/api/posts';
+  private apiRootCategories : string = environment.API_URL + '/api/users';
+  private apiRootProducts : string = environment.API_URL + '/api/categories';
 
   constructor(private http : HttpClient) { }
 
@@ -27,15 +27,15 @@ export class DataService {
   }
 
   getPosts() {
-    return this.http.get<Observable<{status : string, posts : Post[]}>>(this.apiRootPosts);
+    return this.http.get<{status : string, posts : Post[]}>(this.apiRootPosts);
   }
 
   addPost(post:Post) {
-    return this.http.post<Observable<{status:string, insertId:number}>>(this.apiRootPosts, post);
+    return this.http.post<{status:string, insertId:number}>(this.apiRootPosts, post);
   }
 
   deletePost(id:number) {
-    return this.http.delete(this.apiRootPosts + `/${id}`);
+    return this.http.delete<{status:string, affectedRows:number}>(this.apiRootPosts + `/${id}`);
   }
 
   editPost(post:Post) {

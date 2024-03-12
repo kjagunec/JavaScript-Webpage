@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Post} from "../shared/models/post.model";
+import {PostService} from "../shared/services/post.service";
 
 @Component({
   selector: 'app-post',
@@ -12,11 +13,11 @@ export class PostComponent implements OnInit{
   posts : Post[] = [];
   post : Post | undefined = new Post();
 
-  constructor(private route : ActivatedRoute) {}
+  constructor(private route:ActivatedRoute, private postService:PostService, private router:Router) {}
 
   ngOnInit(): void {
-    let idString = this.route.snapshot.paramMap.get('id');
-    let id = 0;
+    let idString : string | null = this.route.snapshot.paramMap.get('id');
+    let id : number = 0;
     if (idString != null)
       id = Number.parseInt(idString);
 
@@ -44,5 +45,9 @@ export class PostComponent implements OnInit{
     this.posts.push(post);
 
     this.post = this.posts.find((p : Post) => p.id == id);
+    //this.post = this.postService.getPost(id);
+    if (this.post == undefined) {
+      this.router.navigate(['unknown']);
+    }
   }
 }

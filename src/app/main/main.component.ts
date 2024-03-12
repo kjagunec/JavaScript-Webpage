@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Post} from "../shared/models/post.model";
 import {Product} from "../shared/models/product.model";
+import {PostService} from "../shared/services/post.service";
 
 @Component({
   selector: 'app-main',
@@ -13,9 +14,13 @@ export class MainComponent implements OnInit {
   categories : string[] = [];
   products : Product[] = [];
 
-  constructor() { }
+  constructor(private postService:PostService) { }
 
   ngOnInit(): void {
+    this.postService.getPosts().subscribe((res : Post[]) => {
+      this.posts = res;
+    });
+
     let post : Post = new Post();
     let product : Product = new Product();
 
