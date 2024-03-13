@@ -11,11 +11,11 @@ export class PostService {
   posts : Post[] = [];
   postSubject : BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
-  constructor(private dataService : DataService) {
-    this.refreshPosts();
+  constructor(/*private dataService : DataService*/) {
+    //this.refreshPosts();
   }
 
-  refreshPosts() {
+  /*refreshPosts() {
     this.dataService.getPosts().subscribe((res : {status:string, posts:Post[]}) => {
       if (res.status == 'OK') {
         this.posts = res.posts;
@@ -46,5 +46,5 @@ export class PostService {
         this.refreshPosts();
       }
     })
-  }
+  }*/
 }

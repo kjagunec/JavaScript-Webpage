@@ -6,6 +6,7 @@ import {NewsComponent} from "./news/news.component";
 import {CategoryComponent} from "./category/category.component";
 import {PostComponent} from "./post/post.component";
 import {UnknownComponent} from "./unknown/unknown.component";
+import {LoginComponent} from "./login/login.component";
 
 export const routes: Routes = [
   {path: '',             component: MainComponent},
@@ -14,5 +15,6 @@ export const routes: Routes = [
   {path: 'products/:id', component: CategoryComponent},
   {path: 'news',         component: NewsComponent},
   {path: 'post/:id',     component: PostComponent},
+  {path: 'login',        component: LoginComponent},
   {path: 'unknown',      component: UnknownComponent}
 ];

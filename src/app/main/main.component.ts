@@ -17,9 +17,9 @@ export class MainComponent implements OnInit {
   constructor(private postService:PostService) { }
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe((res : Post[]) => {
+    /*this.postService.getPosts().subscribe((res : Post[]) => {
       this.posts = res;
-    });
+    });*/
 
     let post : Post = new Post();
     let product : Product = new Product();
