@@ -1,0 +1,57 @@
+module.exports = function(express, pool, jwt, secret, crypto) {
+
+  let authRouter = express.Router();
+
+  authRouter.post('/', async function(req, res) {
+
+    try {
+
+      let connection = await pool.getConnection();
+      let rows = await connection.query('SELECT * FROM users WHERE username = ?', req.body.username);
+      connection.release();
+
+      if (rows.length == 0) {
+
+        res.json({status : `User with username ${req.body.username} doesn't exist`});
+
+      }
+
+      let compare = false;
+
+      if (rows[0].salt) {
+
+        let hash = crypto.pbkdf2Sync(req.body.password, rows[0].salt, 10000, 64, 'sha512');
+        compare = hash.toString('hex') === rows[0].password;
+
+      }
+
+      if (compare) {
+
+        const token = jwt.sign({
+          username : rows[0].username,
+          email : rows[0].email,
+          level : rows[0].level
+        }, secret, {
+          expiresIn: 3600
+        });
+
+        res.json({status:'OK', token:token, user:rows[0]});
+
+      } else if (rows.length > 0) {
+
+        res.json({status : 'Wrong password'});
+
+      }
+
+    } catch (e) {
+
+      console.error(e);
+      return res.json({status : 'Database error while getting users'});
+
+    }
+
+  });
+
+  return authRouter;
+
+}
