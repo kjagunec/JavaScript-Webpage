@@ -10,14 +10,30 @@ module.exports = function(express, pool) {
 
   }).post(async function(req, res) {
 
+    let salt = crypto.randomBytes(128).toString('base64');
+    let hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512');
+
     const user = {
       email : req.body.email,
-      password : req.body.password,
+      password : hash,
       username : req.body.username,
-      admin : req.body.admin
+      admin : req.body.admin,
+      salt : req.body.salt
     };
 
-    await post(res, 'users', user);
+    try {
+
+      let connection = await pool.getConnection();
+      let query = await connection.query('INSERT INTO users SET ?', user);
+      connection.release();
+      res.json({status:'OK', insertId:query.insertId});
+
+    } catch (e) {
+
+      console.error(e);
+      return res.json({status : `Database error while adding user`});
+
+    }
 
   }).put(async function(req, res) {
 
@@ -26,7 +42,8 @@ module.exports = function(express, pool) {
       email : req.body.email,
       password : req.body.password,
       username : req.body.username,
-      admin : req.body.admin
+      admin : req.body.admin,
+      salt : req.body.salt
     };
 
     await put(res, 'users', user);
@@ -170,7 +187,7 @@ module.exports = function(express, pool) {
     } catch (e) {
 
       console.error(e);
-      res.json({status : `Database error while getting ${tableName}`});
+      return res.json({status : `Database error while getting ${tableName}`});
 
     }
 
@@ -188,7 +205,7 @@ module.exports = function(express, pool) {
     } catch (e) {
 
       console.error(e);
-      res.json({status : `Database error while adding ${tableName}`});
+      return res.json({status : `Database error while adding ${tableName}`});
 
     }
 
@@ -206,7 +223,7 @@ module.exports = function(express, pool) {
     } catch (e) {
 
       console.error(e);
-      res.json({status : `Database error while updating ${tableName}`});
+      return res.json({status : `Database error while updating ${tableName}`});
 
     }
 
@@ -224,7 +241,7 @@ module.exports = function(express, pool) {
     } catch (e) {
 
       console.error(e);
-      res.json({status : `Database error while getting ${tableName} with id ${id}`});
+      return res.json({status : `Database error while getting ${tableName} with id ${id}`});
 
     }
 
@@ -242,10 +259,12 @@ module.exports = function(express, pool) {
     } catch (e) {
 
       console.error(e);
-      res.json({status : `Database error while deleting ${tableName} with id ${id}`});
+      return res.json({status : `Database error while deleting ${tableName} with id ${id}`});
 
     }
 
   }
+
+  return apiRouter;
 
 }

@@ -3,14 +3,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const mysql = require('promise-mysql');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 const config = require('./config');
 
 mysql.createPool(config.pool).then(pool => {
-  const authRouter = require('./app/routes/authenticate')(express, pool);
+  const authRouter = require('./app/routes/authenticate')(express, pool, jwt, config.secret);
   app.use('/authenticate', authRouter);
 
-  const apiRouter = require('./app/routes/api')(express, pool);
+  const apiRouter = require('./app/routes/api')(express, pool, jwt, config.secret);
   app.use('/api', apiRouter);
 });
 
@@ -26,9 +27,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/', function (req, res) {
+/*app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'public/app/index.html'));
-});
+});*/
 
 app.listen(config.port);
 

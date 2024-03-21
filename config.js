@@ -7,5 +7,6 @@ module.exports = {
     password : 'rootpass',
     database : 'njp',
     debug : false
-  }
+  },
+  secret : 'nekidugacakstringzakodiranjetokena'
 }
