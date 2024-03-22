@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NavbarModule} from "./navbar/navbar.module";
 import {MainModule} from "./main/main.module";
 import {UnknownModule} from "./unknown/unknown.module";
 import {LoginModule} from "./login/login.module";
+import {AuthService} from "./login/auth/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,12 @@ import {LoginModule} from "./login/login.module";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'projekt';
+
+  constructor(private authService : AuthService) {}
+
+  ngOnInit() {
+    this.authService.whoAmI();
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {User} from "../shared/models/user.model";
+import {User} from "../../shared/models/user.model";
 import {Subject} from "rxjs";
-import {environment} from "../../environments/environment.development";
+import {environment} from "../../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
@@ -68,6 +68,18 @@ export class AuthService {
   }
 
   whoAmI() {
-    
+
+    if (this.getToken()) {
+      this.httpClient.get<{status:string, user?:User}>(environment.API_URL + '/api/me').subscribe((res : {status:string, user?:User}) => {
+
+        if (res.status == 'OK') {
+
+          this.user = res.user;
+          this.authChange.next(true);
+
+        }
+
+      })
+    }
   }
 }

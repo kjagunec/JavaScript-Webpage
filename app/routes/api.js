@@ -1,6 +1,28 @@
-module.exports = function(express, pool) {
+module.exports = function(express, pool, jwt, secret) {
 
   const apiRouter = express.Router();
+
+  apiRouter.use(function (req, res, next) {
+
+    const token = req.body.token || req.params.token || req.headers['x-access-token'] || req.query.token;
+
+    if (token) {
+
+      jwt.verify(token, secret, function (err, decoded) {
+
+        if (err) {
+          return res.json({status : 'Wrong token'});
+        } else {
+          req.decoded = decoded;
+          next();
+        }
+      })
+
+    } else {
+      return res.json({status:'No token'});
+    }
+
+  });
 
 
   //users
@@ -172,6 +194,13 @@ module.exports = function(express, pool) {
   }).delete(async function(req, res) {
 
     await del(res, 'products', req.params.id);
+
+  });
+
+
+  apiRouter.get('/me', function (req, res) {
+
+    res.json({status:'OK', user:req.decoded});
 
   });
 
