@@ -7,12 +7,12 @@ module.exports = function(express, pool, jwt, secret, crypto) {
     try {
 
       let connection = await pool.getConnection();
-      let rows = await connection.query('SELECT * FROM users WHERE username = ?', req.body.username);
+      let rows = await connection.query('SELECT * FROM users WHERE email = ?', req.body.email);
       connection.release();
 
       if (rows.length == 0) {
 
-        res.json({status : `User with username ${req.body.username} doesn't exist`});
+        res.json({status : `User with e-mail ${req.body.email} doesn't exist`});
 
       }
 
@@ -28,9 +28,12 @@ module.exports = function(express, pool, jwt, secret, crypto) {
       if (compare) {
 
         const token = jwt.sign({
-          username : rows[0].username,
+          id : rows[0].id,
           email : rows[0].email,
-          level : rows[0].level
+          password : rows[0].password,
+          username : rows[0].username,
+          admin : rows[0].admin,
+          salt : rows[0].salt
         }, secret, {
           expiresIn: 3600
         });
