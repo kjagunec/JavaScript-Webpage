@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
 import {Post} from "../models/post.model";
 import {User} from "../models/user.model";
+import {Category} from "../models/category.model";
+import {Product} from "../models/product.model";
 
 
 @Injectable({
@@ -18,27 +19,71 @@ export class DataService {
 
   constructor(private http : HttpClient) { }
 
+  //users
   getUsers() {
-    return this.http.get<Observable<{status: string, users : User[]}>>(this.apiRootUsers);
+    return this.http.get<{status:string, rows:User[]}>(this.apiRootUsers);
   }
 
   addUser(user : User) {
-    return this.http.post<Observable<{status : string, insertId : number}>>(this.apiRootUsers, user);
+    return this.http.post<{status:string, insertId:number}>(this.apiRootUsers, user);
   }
 
+  deleteUser(id : number) {
+    return this.http.delete<{status:string, affectedRows:number}>(this.apiRootUsers + `/${id}`);
+  }
+
+  editUser(user : User) {
+    return this.http.put(this.apiRootUsers, user);
+  }
+
+  //posts
   getPosts() {
-    return this.http.get<{status : string, posts : Post[]}>(this.apiRootPosts);
+    return this.http.get<{status : string, rows : Post[]}>(this.apiRootPosts);
   }
 
-  addPost(post:Post) {
+  addPost(post : Post) {
     return this.http.post<{status:string, insertId:number}>(this.apiRootPosts, post);
   }
 
-  deletePost(id:number) {
+  deletePost(id : number) {
     return this.http.delete<{status:string, affectedRows:number}>(this.apiRootPosts + `/${id}`);
   }
 
-  editPost(post:Post) {
+  editPost(post : Post) {
     return this.http.put(this.apiRootPosts, post);
+  }
+
+  //categories
+  getCategories() {
+    return this.http.get<{status:string, rows:Category[]}>(this.apiRootCategories);
+  }
+
+  addCategory(category : Category) {
+    return this.http.post<{status:string, insertId:number}>(this.apiRootCategories, category);
+  }
+
+  deleteCategory(id : number) {
+    return this.http.delete<{status:string, affectedRows:number}>(this.apiRootCategories + `/${id}`);
+  }
+
+  editCategory(category : Category) {
+    return this.http.put(this.apiRootCategories, category);
+  }
+
+  //products
+  getProducts() {
+    return this.http.get<{status:string, rows:Product[]}>(this.apiRootProducts);
+  }
+
+  addProduct(product : Product) {
+    return this.http.post<{status:string, insertId:number}>(this.apiRootProducts, product);
+  }
+
+  deleteProduct(id:number) {
+    return this.http.delete<{status:string, affectedRows:number}>(this.apiRootProducts + `/${id}`);
+  }
+
+  editProduct(product : Product) {
+    return this.http.put(this.apiRootProducts, product);
   }
 }
