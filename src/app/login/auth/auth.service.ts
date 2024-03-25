@@ -3,6 +3,7 @@ import {User} from "../../shared/models/user.model";
 import {Subject} from "rxjs";
 import {environment} from "../../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +12,15 @@ export class AuthService {
 
   private user? : User | null;
   private token?  : string | null;
+  private authUrl : string = environment.API_URL + '/authenticate';
   errorEmitter : Subject<string> = new Subject<string>();
   authChange : Subject<boolean> = new Subject<boolean>();
-  authUrl : string = environment.API_URL + '/authenticate';
 
-  constructor(private httpClient : HttpClient) { }
+  constructor(private httpClient:HttpClient, private router:Router) { }
 
-  login(email : string, password : string) {
+  login(credentials : {email:string, password:string}) {
 
-    this.httpClient.post<{status:string, user:User, token:string}>(this.authUrl, {email:email, password:password}).subscribe((res : {status:string, user:User, token:string}) => {
+    this.httpClient.post<{status:string, user:User, token:string}>(this.authUrl, credentials).subscribe((res : {status:string, user:User, token:string}) => {
 
       if (res.status == 'OK') {
 
@@ -27,6 +28,8 @@ export class AuthService {
         this.token = res.token;
         sessionStorage.setItem('token', this.token);
         this.authChange.next(true);
+        //this.errorEmitter.next('');
+        //this.router.navigate(['/']);
 
       } else {
 
@@ -57,7 +60,7 @@ export class AuthService {
 
     if (this.token) return this.token;
     else {
-      this.token = localStorage.getItem('token');
+      this.token = sessionStorage.getItem('token');
       return this.token;
     }
 

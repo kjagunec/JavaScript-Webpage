@@ -1,39 +1,46 @@
 <div class="container-md mt-3" style="max-width: 700px">
   <h3 class="text-center">Prijava</h3>
-  <form class="mb-5">
+  <form (submit)="onLoginSubmit()" [formGroup]="loginForm" class="mb-5">
     <div class="form-floating mb-3">
-      <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+      <input type="email" class="form-control" [ngClass]="checkIfValid(loginForm, 'email')" formControlName="email" id="loginEmail" placeholder="name@example.com">
       <label for="loginEmail">E-Mail adresa</label>
+      <div class="invalid-feedback">{{loginEmailMessage}}</div>
     </div>
     <div class="form-floating mb-3">
-      <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+      <input type="password" class="form-control" [ngClass]="checkIfValid(loginForm, 'password')" formControlName="password" id="loginPassword" placeholder="Password">
       <label for="loginPassword">Lozinka</label>
+      <div class="invalid-feedback">Obavezno polje!</div>
     </div>
-    <button type="submit" class="btn btn-primary me-3">Prijava</button>
+    <div>{{loginErrorMessage}}</div>
+    <button type="submit" class="btn btn-primary me-3" [disabled]="!this.loginForm.valid">Prijava</button>
     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#registerFormCollapse" aria-expanded="false" aria-controls="registerFormCollapse">
       Registracija
     </button>
   </form>
   <div class="collapse mb-5" id="registerFormCollapse">
     <h3 class="text-center">Registracija</h3>
-    <form>
+    <form (submit)="onRegisterSubmit()" [formGroup]="registerForm">
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="registerEmail" placeholder="name@example.com">
+        <input type="email" class="form-control" [ngClass]="checkIfValid(registerForm, 'email')" formControlName="email" id="registerEmail" placeholder="name@example.com">
         <label for="registerEmail">E-Mail adresa</label>
+        <div class="invalid-feedback">{{registerEmailMessage}}</div>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="registerPassword1" placeholder="Password">
+        <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password1')" formControlName="password1" id="registerPassword1" placeholder="Password">
         <label for="registerPassword1">Lozinka</label>
+        <div class="invalid-feedback">Obavezno polje!</div>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="registerPassword2" placeholder="Password">
+        <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password2')" formControlName="password2" id="registerPassword2" placeholder="Password">
         <label for="registerPassword2">Ponovi lozinku</label>
+        <div class="invalid-feedback">Obavezno polje!</div>
       </div>
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="registerUsername" placeholder="Username">
+        <input type="text" class="form-control" [ngClass]="checkIfValid(registerForm, 'username')" formControlName="username" id="registerUsername" placeholder="Username">
         <label for="registerUsername">Korisničko ime</label>
+        <div class="invalid-feedback">Obavezno polje!</div>
       </div>
-      <button type="submit" class="btn btn-secondary">Registriraj se</button>
+      <button type="submit" class="btn btn-secondary" [disabled]="!registerForm.valid">Registriraj se</button>
     </form>
   </div>
 </div>

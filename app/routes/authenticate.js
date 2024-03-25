@@ -10,9 +10,9 @@ module.exports = function(express, pool, jwt, secret, crypto) {
       let rows = await connection.query('SELECT * FROM users WHERE email = ?', req.body.email);
       connection.release();
 
-      if (rows.length == 0) {
+      if (rows.length === 0) {
 
-        res.json({status : `User with e-mail ${req.body.email} doesn't exist`});
+        return res.json({status : `User with e-mail ${req.body.email} doesn't exist`});
 
       }
 
