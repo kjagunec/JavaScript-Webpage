@@ -28,8 +28,8 @@ export class AuthService {
         this.token = res.token;
         sessionStorage.setItem('token', this.token);
         this.authChange.next(true);
-        //this.errorEmitter.next('');
-        //this.router.navigate(['/']);
+        this.errorEmitter.next('');
+        this.router.navigate(['/']);
 
       } else {
 
@@ -80,7 +80,7 @@ export class AuthService {
           this.user = res.user;
           this.authChange.next(true);
 
-        }
+        } else console.log(res.status);
 
       })
     }

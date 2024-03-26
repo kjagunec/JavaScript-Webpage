@@ -9,7 +9,6 @@ import {provideHttpClient, withInterceptors} from "@angular/common/http";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideClientHydration(),
     provideHttpClient(withInterceptors([authInterceptor]))
   ]
 };

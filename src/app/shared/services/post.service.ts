@@ -8,8 +8,8 @@ import {BehaviorSubject} from "rxjs";
 })
 export class PostService {
 
-  posts : Post[] = [];
-  postSubject : BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+  private posts : Post[] = [];
+  private postSubject : BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
   constructor(private dataService : DataService) {
     this.refreshPosts();
@@ -20,7 +20,7 @@ export class PostService {
       if (res.status == 'OK') {
         this.posts = res.rows;
         this.postSubject.next([...this.posts]);
-      }
+      } else console.log(res.status);
     })
   }
 
@@ -30,9 +30,8 @@ export class PostService {
 
   addPost(post : Post) {
     this.dataService.addPost(post).subscribe((res : {status:string, insertId:number}) => {
-      if (res.status == 'OK') {
-        this.refreshPosts();
-      }
+      if (res.status == 'OK') this.refreshPosts();
+      else console.log(res.status);
     })
   }
 
@@ -42,9 +41,8 @@ export class PostService {
 
   deletePost(postId : number) {
     this.dataService.deletePost(postId).subscribe((res : {status:string, affectedRows:number}) => {
-      if (res.status == 'OK') {
-        this.refreshPosts();
-      }
+      if (res.status == 'OK') this.refreshPosts();
+      else console.log(res.status);
     })
   }
 }

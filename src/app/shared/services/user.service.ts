@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {User} from "../models/user.model";
 import {DataService} from "./data.service";
 
@@ -8,8 +8,10 @@ import {DataService} from "./data.service";
 })
 export class UserService {
 
-  users : User[] = [];
-  userSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  private users : User[] = [];
+  private userSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  errorEmmiter : Subject<string> = new Subject<string>();
+  newUserAddedEmmiter : Subject<string> = new Subject<string>();
 
   constructor(private dataService : DataService) {
     this.refreshUsers();
@@ -20,6 +22,9 @@ export class UserService {
       if (res.status == 'OK') {
         this.users = res.rows;
         this.userSubject.next([...this.users]);
+      } else {
+        console.log(res.status);
+        this.errorEmmiter.next(res.status);
       }
     })
   }
@@ -31,7 +36,12 @@ export class UserService {
   addUser(user : User) {
     this.dataService.addUser(user).subscribe((res : {status:string, insertId:number}) => {
       if (res.status == 'OK') {
+        this.newUserAddedEmmiter.next('Uspješna registracija!')
         this.refreshUsers();
+      }
+      else {
+        console.log(res.status);
+        this.errorEmmiter.next(res.status);
       }
     })
   }
@@ -42,8 +52,10 @@ export class UserService {
 
   deleteUser(userId : number) {
     this.dataService.deleteUser(userId).subscribe((res : {status:string, affectedRows:number}) => {
-      if (res.status == 'OK') {
-        this.refreshUsers();
+      if (res.status == 'OK') this.refreshUsers();
+      else {
+        console.log(res.status);
+        this.errorEmmiter.next(res.status);
       }
     })
   }

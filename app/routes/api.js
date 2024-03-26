@@ -2,6 +2,56 @@ module.exports = function(express, pool, jwt, secret) {
 
   const apiRouter = express.Router();
 
+  const dataTypes = [
+    'users',
+    'posts',
+    'products',
+    'categories'
+  ];
+
+
+  //get
+  dataTypes.forEach(dataType => {
+
+    apiRouter.get(`/${dataType}`, async function(req, res) {
+
+      await get(res, dataType);
+
+    });
+
+  });
+
+  apiRouter.post('/users' ,async function(req, res) {
+
+    let salt = require('crypto').randomBytes(128).toString('base64');
+    let hash = require('crypto').pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512');
+
+    const user = {
+      email : req.body.email,
+      password : hash.toString('hex'),
+      username : req.body.username,
+      admin : req.body.admin,
+      salt : salt
+    };
+
+    try {
+
+      let connection = await pool.getConnection();
+      let query = await connection.query('INSERT INTO users SET ?', user);
+      connection.release();
+      res.json({status:'OK', insertId:query.insertId});
+
+    } catch (e) {
+
+      console.error(e);
+      return res.json({status : `Database error while adding user`});
+
+    }
+
+  })
+
+
+  //token
   apiRouter.use(function (req, res, next) {
 
     const token = req.body.token || req.params.token || req.headers['x-access-token'] || req.query.token;
@@ -26,38 +76,7 @@ module.exports = function(express, pool, jwt, secret) {
 
 
   //users
-  apiRouter.route('/users').get(async function(req, res) {
-
-    await get(res, 'users');
-
-  }).post(async function(req, res) {
-
-    let salt = crypto.randomBytes(128).toString('base64');
-    let hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512');
-
-    const user = {
-      email : req.body.email,
-      password : hash,
-      username : req.body.username,
-      admin : req.body.admin,
-      salt : req.body.salt
-    };
-
-    try {
-
-      let connection = await pool.getConnection();
-      let query = await connection.query('INSERT INTO users SET ?', user);
-      connection.release();
-      res.json({status:'OK', insertId:query.insertId});
-
-    } catch (e) {
-
-      console.error(e);
-      return res.json({status : `Database error while adding user`});
-
-    }
-
-  }).put(async function(req, res) {
+  apiRouter.put('/users', async function(req, res) {
 
     const user = {
       id : req.body.id,
@@ -78,17 +97,13 @@ module.exports = function(express, pool, jwt, secret) {
 
   }).delete(async function(req, res) {
 
-    await del(res, 'users', req.params.id);
+    await remove(res, 'users', req.params.id);
 
   });
 
 
   //posts
-  apiRouter.route('/posts').get(async function(req, res) {
-
-    await get(res, 'posts');
-
-  }).post(async function(req, res) {
+  apiRouter.route('/posts').post(async function(req, res) {
 
     const news = {
       title : req.body.title,
@@ -119,17 +134,13 @@ module.exports = function(express, pool, jwt, secret) {
 
   }).delete(async function(req, res) {
 
-    await del(res, 'posts', req.params.id);
+    await remove(res, 'posts', req.params.id);
 
   });
 
 
   //categories
-  apiRouter.route('/categories').get(async function(req, res) {
-
-    await get(res, 'categories');
-
-  }).post(async function(req, res) {
+  apiRouter.route('/categories').post(async function(req, res) {
 
     const category = {
       name : req.body.name
@@ -154,17 +165,13 @@ module.exports = function(express, pool, jwt, secret) {
 
   }).delete(async function(req, res) {
 
-    await del(res, 'categories', req.params.id);
+    await remove(res, 'categories', req.params.id);
 
   });
 
 
   //products
-  apiRouter.route('/products').get(async function(req, res) {
-
-    await get(res, 'products');
-
-  }).post(async function(req, res) {
+  apiRouter.route('/products').post(async function(req, res) {
 
     const product = {
       name : req.body.name,
@@ -193,7 +200,7 @@ module.exports = function(express, pool, jwt, secret) {
 
   }).delete(async function(req, res) {
 
-    await del(res, 'products', req.params.id);
+    await remove(res, 'products', req.params.id);
 
   });
 
@@ -276,7 +283,7 @@ module.exports = function(express, pool, jwt, secret) {
 
   }
 
-  async function del(res, tableName, id) {
+  async function remove(res, tableName, id) {
 
     try {
 

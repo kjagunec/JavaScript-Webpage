@@ -8,8 +8,8 @@ import {Category} from "../models/category.model";
 })
 export class CategoryService {
 
-  categories : Category[] = [];
-  categorySubject : BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
+  private categories : Category[] = [];
+  private categorySubject : BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
 
   constructor(private dataService : DataService) {
     this.refreshCategories();
@@ -20,7 +20,7 @@ export class CategoryService {
       if (res.status == 'OK') {
         this.categories = res.rows;
         this.categorySubject.next([...this.categories]);
-      }
+      } else console.log(res.status);
     })
   }
 
@@ -30,9 +30,8 @@ export class CategoryService {
 
   addCategory(category : Category) {
     this.dataService.addCategory(category).subscribe((res : {status:string, insertId:number}) => {
-      if (res.status == 'OK') {
-        this.refreshCategories();
-      }
+      if (res.status == 'OK') this.refreshCategories();
+      else console.log(res.status);
     })
   }
 
@@ -42,9 +41,8 @@ export class CategoryService {
 
   deleteCategory(categoryId : number) {
     this.dataService.deleteCategory(categoryId).subscribe((res : {status:string, affectedRows:number}) => {
-      if (res.status == 'OK') {
-        this.refreshCategories();
-      }
+      if (res.status == 'OK') this.refreshCategories();
+      else console.log(res.status);
     })
   }
 }

@@ -8,8 +8,8 @@ import {Product} from "../models/product.model";
 })
 export class ProductService {
 
-  products : Product[] = [];
-  productSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+  private products : Product[] = [];
+  private productSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
 
   constructor(private dataService : DataService) {
     this.refreshProducts();
@@ -20,7 +20,7 @@ export class ProductService {
       if (res.status == 'OK') {
         this.products = res.rows;
         this.productSubject.next([...this.products]);
-      }
+      } else console.log(res.status);
     })
   }
 
@@ -30,9 +30,8 @@ export class ProductService {
 
   addProduct(product : Product) {
     this.dataService.addProduct(product).subscribe((res : {status:string, insertId:number}) => {
-      if (res.status == 'OK') {
-        this.refreshProducts();
-      }
+      if (res.status == 'OK') this.refreshProducts();
+      else console.log(res.status);
     })
   }
 
@@ -42,9 +41,8 @@ export class ProductService {
 
   deleteProduct(productId : number) {
     this.dataService.deleteProduct(productId).subscribe((res : {status:string, affectedRows:number}) => {
-      if (res.status == 'OK') {
-        this.refreshProducts();
-      }
+      if (res.status == 'OK') this.refreshProducts();
+      else console.log(res.status);
     })
   }
 }

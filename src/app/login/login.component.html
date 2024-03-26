@@ -11,7 +11,7 @@
       <label for="loginPassword">Lozinka</label>
       <div class="invalid-feedback">Obavezno polje!</div>
     </div>
-    <div>{{loginErrorMessage}}</div>
+    <div *ngIf="loginErrorMessage != ''" class="alert alert-danger">{{loginErrorMessage}}</div>
     <button type="submit" class="btn btn-primary me-3" [disabled]="!this.loginForm.valid">Prijava</button>
     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#registerFormCollapse" aria-expanded="false" aria-controls="registerFormCollapse">
       Registracija
@@ -40,6 +40,8 @@
         <label for="registerUsername">Korisničko ime</label>
         <div class="invalid-feedback">Obavezno polje!</div>
       </div>
+      <div *ngIf="registerErrorMessage != ''" class="alert alert-danger" role="alert">{{registerErrorMessage}}</div>
+      <div *ngIf="registerSuccessMessage != ''" class="alert alert-success" role="alert">{{registerSuccessMessage}}</div>
       <button type="submit" class="btn btn-secondary" [disabled]="!registerForm.valid">Registriraj se</button>
     </form>
   </div>

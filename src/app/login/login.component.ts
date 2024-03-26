@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "./auth/auth.service";
-import {update} from "@angular-devkit/build-angular/src/tools/esbuild/angular/compilation/parallel-worker";
+import {UserService} from "../shared/services/user.service";
+import {User} from "../shared/models/user.model";
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,12 @@ export class LoginComponent implements OnInit{
 
   registerForm! : FormGroup;
   registerErrorMessage : string = '';
+  registerSuccessMessage : string = '';
   registerEmailMessage : string = '';
 
-  constructor(private fb:FormBuilder, private authService:AuthService) {}
+  users : User[] = [];
+
+  constructor(private fb:FormBuilder, private authService:AuthService, private userService:UserService) {}
 
   ngOnInit() {
 
@@ -34,8 +38,16 @@ export class LoginComponent implements OnInit{
       'username' : new FormControl('', Validators.required)
     });
 
-    this.authService.errorEmitter.subscribe((res : string) => {
-      this.loginErrorMessage = res;
+    this.authService.errorEmitter.subscribe((message : string) => {
+      this.loginErrorMessage = message;
+    });
+
+    this.userService.errorEmmiter.subscribe((message : string) => {
+      this.registerErrorMessage = message;
+    });
+
+    this.userService.newUserAddedEmmiter.subscribe((message : string) => {
+      this.registerSuccessMessage = message;
     });
 
     this.loginForm.valueChanges.subscribe(res => {
@@ -73,6 +85,26 @@ export class LoginComponent implements OnInit{
 
     } else {
 
+      this.userService.getUsers().subscribe((users : User[]) => {
+
+        this.users = users;
+
+      });
+
+      if (this.users.find((u : User) => this.registerForm.value['email'] === u.email)) {
+
+        this.registerErrorMessage = 'Već postoji korisnički račun s tom e-mail adresom!';
+
+      } else {
+
+        let user : User = new User();
+        user.email = this.registerForm.value['email'];
+        user.password = this.registerForm.value['password1'];
+        user.username = this.registerForm.value['username'];
+
+        this.userService.addUser(user);
+
+      }
 
     }
 
