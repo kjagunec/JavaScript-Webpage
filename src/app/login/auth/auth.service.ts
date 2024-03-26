@@ -46,6 +46,7 @@ export class AuthService {
     this.token = null;
     sessionStorage.removeItem('token');
     this.authChange.next(false);
+    if (window.location.pathname == '/user') this.router.navigate(['login']);
 
   }
 

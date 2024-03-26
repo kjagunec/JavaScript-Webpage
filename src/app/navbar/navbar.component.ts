@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {User} from "../shared/models/user.model";
+import {AuthService} from "../login/auth/auth.service";
+import {NavbarService} from "../shared/services/navbar.service";
 
 @Component({
   selector: 'app-navbar',
@@ -8,12 +9,26 @@ import {User} from "../shared/models/user.model";
 })
 export class NavbarComponent implements OnInit {
 
-  user : User | undefined = new User();
+  currentRoute : string = '';
 
-  constructor() { }
+  constructor(private authService:AuthService, private navbar:NavbarService) { }
 
-  ngOnInit(): void {
-    this.user = undefined;
+  ngOnInit() {
+    this.navbar.getCurrentRoute().subscribe(route => {
+      this.currentRoute = route;
+    })
+    this.navbar.checkCurrentRoute();
   }
 
+  isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  getUsername() {
+    return this.authService.getUser()?.username;
+  }
 }

@@ -9,38 +9,36 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mb-2 mb-md-0 w-100 justify-content-evenly">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['']">Početna</a>
+          <a class="nav-link" aria-current="page" [routerLink]="['']" [ngClass]="currentRoute == '/' ? 'active' : ''">Početna</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['about']">O nama</a>
+          <a class="nav-link" [routerLink]="['about']" [ngClass]="currentRoute == '/about' ? 'active' : ''">O nama</a>
         </li>
-        <li class="nav-item dropdown btn-group">
-          <a class="nav-link" [routerLink]="['products']" role="button">Proizvodi</a>
-          <a class="nav-link dropdown-toggle dropdown-toggle-split" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" [ngClass]="currentRoute == '/products' ? 'active' : ''" role="button" data-bs-toggle="dropdown" aria-expanded="false">Proizvodi</a>
           <ul class="dropdown-menu bg-primary-subtle">
-            <li><a class="dropdown-item" href="#">Mlijeko</a></li>
-            <li><a class="dropdown-item" href="#">Vrhnja</a></li>
-            <li><a class="dropdown-item" href="#">Maslac, kajmaci i namazi</a></li>
-            <li><a class="dropdown-item" href="#">Sirutka i mlaćenica</a></li>
+            <li><a class="dropdown-item" [routerLink]="['products']">Svi proizvodi</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" [routerLink]="['products']">Mlijeko</a></li>
+            <li><a class="dropdown-item" [routerLink]="['products']">Vrhnja</a></li>
+            <li><a class="dropdown-item" [routerLink]="['products']">Maslac, kajmaci i namazi</a></li>
+            <li><a class="dropdown-item" [routerLink]="['products']">Sirutka i mlaćenica</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="['news']">Novosti</a>
+          <a class="nav-link" [routerLink]="['news']" [ngClass]="currentRoute == '/news' ? 'active' : ''">Novosti</a>
         </li>
-        <li class="nav-item dropdown" *ngIf="user; else noUser">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li class="nav-item dropdown" [ngClass]="currentRoute == '/profile' ? 'active' : ''" *ngIf="isAuthenticated(); else noUser">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{getUsername()}}</a>
+          <ul class="dropdown-menu bg-primary-subtle">
+            <li><a class="dropdown-item">Moj korisnički račun</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item text-danger" (click)="logout()">Odjava</a></li>
           </ul>
         </li>
         <ng-template #noUser>
           <li class="nav-item">
-            <a class="nav-link" [routerLink]="['login']">Prijava</a>
+            <a class="nav-link" [routerLink]="['login']" [ngClass]="currentRoute == '/login' ? 'active' : ''">Prijava</a>
           </li>
         </ng-template>
 

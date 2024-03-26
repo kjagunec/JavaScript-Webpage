@@ -16,5 +16,5 @@ export const routes: Routes = [
   {path: 'news',         component: NewsComponent},
   {path: 'post/:id',     component: PostComponent},
   {path: 'login',        component: LoginComponent},
-  {path: 'unknown',      component: UnknownComponent}
+  {path: '**',            component: UnknownComponent}
 ];

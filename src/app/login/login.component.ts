@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "./auth/auth.service";
 import {UserService} from "../shared/services/user.service";
 import {User} from "../shared/models/user.model";
+import {NavbarService} from "../shared/services/navbar.service";
 
 @Component({
   selector: 'app-login',
@@ -22,9 +23,11 @@ export class LoginComponent implements OnInit{
 
   users : User[] = [];
 
-  constructor(private fb:FormBuilder, private authService:AuthService, private userService:UserService) {}
+  constructor(private fb:FormBuilder, private authService:AuthService, private userService:UserService, private navbar:NavbarService) {}
 
   ngOnInit() {
+
+    this.navbar.checkCurrentRoute();
 
     this.loginForm = this.fb.group({
       'email' : new FormControl('', [Validators.email, Validators.required]),

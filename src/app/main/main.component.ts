@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Post} from "../shared/models/post.model";
 import {Product} from "../shared/models/product.model";
 import {PostService} from "../shared/services/post.service";
+import {NavbarService} from "../shared/services/navbar.service";
 
 @Component({
   selector: 'app-main',
@@ -14,12 +15,14 @@ export class MainComponent implements OnInit {
   categories : string[] = [];
   products : Product[] = [];
 
-  constructor(private postService:PostService) { }
+  constructor(private postService:PostService, private navbar:NavbarService) { }
 
   ngOnInit(): void {
     /*this.postService.getPosts().subscribe((res : Post[]) => {
       this.posts = res;
     });*/
+
+    this.navbar.checkCurrentRoute();
 
     let post : Post = new Post();
     let product : Product = new Product();
