@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit{
     });
 
     this.userService.newUserAddedEmmiter.subscribe((message : string) => {
+      this.registerErrorMessage = '';
       this.registerSuccessMessage = message;
     });
 

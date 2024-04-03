@@ -46,11 +46,11 @@ export class AuthService {
     this.token = null;
     sessionStorage.removeItem('token');
     this.authChange.next(false);
-    if (window.location.pathname == '/user') this.router.navigate(['login']);
+    if (window.location.pathname == '/profile') this.router.navigate(['login']);
 
   }
 
-  getUser() {
+  getUser() : User | null {
 
     if (this.user) return {...this.user}
     else return null;
@@ -69,6 +69,10 @@ export class AuthService {
 
   isAuthenticated() {
     return this.user != null;
+  }
+
+  isAdmin() {
+    return this.user?.admin;
   }
 
   whoAmI() {

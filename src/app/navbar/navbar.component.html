@@ -31,7 +31,7 @@
         <li class="nav-item dropdown" [ngClass]="currentRoute == '/profile' ? 'active' : ''" *ngIf="isAuthenticated(); else noUser">
           <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{getUsername()}}</a>
           <ul class="dropdown-menu bg-primary-subtle">
-            <li><a class="dropdown-item">Moj korisnički račun</a></li>
+            <li><a class="dropdown-item" [routerLink]="['profile']">Moj korisnički račun</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" (click)="logout()">Odjava</a></li>
           </ul>
