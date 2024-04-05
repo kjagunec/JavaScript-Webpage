@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './profile.component';
+import {RouterLink} from "@angular/router";
 
 
 
@@ -8,8 +9,9 @@ import { ProfileComponent } from './profile.component';
   declarations: [
     ProfileComponent
   ],
-  imports: [
-    CommonModule
-  ]
+    imports: [
+        CommonModule,
+        RouterLink
+    ]
 })
 export class ProfileModule { }

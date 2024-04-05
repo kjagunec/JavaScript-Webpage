@@ -28,12 +28,12 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['news']" [ngClass]="currentRoute == '/news' ? 'active' : ''">Novosti</a>
         </li>
-        <li class="nav-item dropdown" [ngClass]="currentRoute == '/profile' ? 'active' : ''" *ngIf="isAuthenticated(); else noUser">
-          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{getUsername()}}</a>
+        <li class="nav-item dropdown" *ngIf="isAuthenticated(); else noUser">
+          <a class="nav-link dropdown-toggle" [ngClass]="currentRoute == '/profile' ? 'active' : ''" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{getUsername()}}</a>
           <ul class="dropdown-menu bg-primary-subtle">
             <li><a class="dropdown-item" [routerLink]="['profile']">Moj korisnički račun</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" (click)="logout()">Odjava</a></li>
+            <li><a class="dropdown-item text-danger" [routerLink]="['']" (click)="logout()">Odjava</a></li>
           </ul>
         </li>
         <ng-template #noUser>

@@ -1,36 +1,79 @@
 <div class="container-md">
   <h1 class="my-5">{{user?.username}} korisnički račun</h1>
-  <div class="accordion accordion-flush" *ngIf="isAdmin(); else notAdmin">
+  <div class="accordion accordion-flush">
     <section class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          Accordion Item #1
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePosts" aria-expanded="false" aria-controls="flush-collapsePosts">
+          Novosti
         </button>
       </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+      <div id="flush-collapsePosts" class="accordion-collapse collapse row row-cols-1 row-cols-lg-4 row-cols-md-2">
+        <article class="col accordion-body" *ngFor="let p of posts">
+          <div class="card border-0">
+            <img src="{{p.picture}}" class="card-img-top" alt="post image">
+            <div class="card-body">
+              <h5 class="card-title">{{p.title}}</h5>
+              <p class="card-text" *ngIf="isAdmin()">Korisnik: </p>
+              <button class="btn btn-warning" *ngIf="isAdmin()">Uredi</button>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
-    <section class="accordion-item">
+    <section class="accordion-item" *ngIf="isAdmin()">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-          Accordion Item #2
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseProducts" aria-expanded="false" aria-controls="flush-collapseProducts">
+          Proizvodi
         </button>
       </h2>
-      <div id="flush-collapseTwo" class="accordion-collapse collapse">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+      <div id="flush-collapseProducts" class="accordion-collapse collapse row row-cols-1 row-cols-lg-4 row-cols-md-2">
+        <article class="col card border-0 accordion-body">
+          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <button class="btn btn-warning mt-1">Uredi</button>
+          </div>
+        </article>
+        <article class="col card border-0 accordion-body">
+          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <button class="btn btn-warning mt-1">Uredi</button>
+          </div>
+        </article>
       </div>
     </section>
-    <section class="accordion-item">
+    <section class="accordion-item" *ngIf="isAdmin()">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-          Accordion Item #3
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseCategories" aria-expanded="false" aria-controls="flush-collapseCategories">
+          Kategorije
         </button>
       </h2>
-      <div id="flush-collapseThree" class="accordion-collapse collapse">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+      <div id="flush-collapseCategories" class="accordion-collapse collapse">
+        <ul class="list-group list-group-flush accordion-body">
+          <li class="list-group-item">An item</li>
+          <li class="list-group-item">A second item</li>
+          <li class="list-group-item">A third item</li>
+          <li class="list-group-item">A fourth item</li>
+          <li class="list-group-item">And a fifth one</li>
+        </ul>
+      </div>
+    </section>
+    <section class="accordion-item" *ngIf="isAdmin()">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseUsers" aria-expanded="false" aria-controls="flush-collapseUsers">
+          Korisnici
+        </button>
+      </h2>
+      <div id="flush-collapseUsers" class="accordion-collapse collapse">
+        <ul class="list-group list-group-flush accordion-body">
+          <li class="list-group-item">An item</li>
+          <li class="list-group-item">A second item</li>
+          <li class="list-group-item">A third item</li>
+          <li class="list-group-item">A fourth item</li>
+          <li class="list-group-item">And a fifth one</li>
+        </ul>
       </div>
     </section>
   </div>
-  <ng-template #notAdmin>Trenutno nemate administratorske ovlasti. Iste trebate zatražiti od trenutnog admina.</ng-template>
 </div>
