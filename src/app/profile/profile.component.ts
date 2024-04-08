@@ -4,6 +4,7 @@ import {User} from "../shared/models/user.model";
 import {NavbarService} from "../shared/services/navbar.service";
 import {Post} from "../shared/models/post.model";
 import {PostService} from "../shared/services/post.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +16,9 @@ export class ProfileComponent implements OnInit{
   user : User | null = new User();
   posts : Post[] = []
 
-  constructor(private authService:AuthService, private navService:NavbarService, private postService:PostService) {}
+  editingPost : Post = new Post();
+
+  constructor(private authService:AuthService, private navService:NavbarService, private router:Router, private postService:PostService) {}
 
   ngOnInit() {
     let post : Post = new Post();
@@ -40,6 +43,8 @@ export class ProfileComponent implements OnInit{
     post.text = "text3";
     this.posts.push(post);
 
+    if (!this.authService.isAuthenticated()) this.router.navigate(['']);
+
     this.navService.checkCurrentRoute();
 
     this.authService.userChange.subscribe(res => {
@@ -62,4 +67,13 @@ export class ProfileComponent implements OnInit{
     return this.authService.isAdmin();
   }
 
+  editPost(post : Post) {
+    this.editingPost = {...post};
+  }
+
+  saveEditPost() {
+    this.posts.forEach(p => {
+      if (p.id == this.editingPost.id) p = this.editingPost;
+    })
+  }
 }

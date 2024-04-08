@@ -14,7 +14,7 @@
             <div class="card-body">
               <h5 class="card-title">{{p.title}}</h5>
               <p class="card-text" *ngIf="isAdmin()">Korisnik: </p>
-              <button class="btn btn-warning" *ngIf="isAdmin()">Uredi</button>
+              <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
             </div>
           </div>
         </article>
@@ -76,4 +76,36 @@
       </div>
     </section>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalPostLabel">Edit post {{editingPost.title}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img class="img-fluid" src="{{editingPost.picture}}" alt="post picture">
+          <div class="form-floating mt-3">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl" placeholder="postPictureUrl">
+            <label for="postPictureUrl">Link na sliku</label>
+          </div>
+          <div class="form-floating mt-3">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.title" id="postTitle" placeholder="postTitle">
+            <label for="postTitle">Naslov objave</label>
+          </div>
+          <div class="form-floating mt-3">
+            <textarea type="text" class="form-control" [(ngModel)]="editingPost.text" id="postText" placeholder="postText"></textarea>
+            <label for="postText">Tekst objave</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
+          <button type="button" class="btn btn-primary" (click)="saveEditPost()" data-bs-dismiss="modal">Spremi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

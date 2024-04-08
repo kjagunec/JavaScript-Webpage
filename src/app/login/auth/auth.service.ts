@@ -29,7 +29,7 @@ export class AuthService {
         sessionStorage.setItem('token', this.token);
         this.userChange.next({...this.user});
         this.errorEmitter.next('');
-        this.router.navigate(['/']);
+        this.router.navigate(['profile']);
 
       } else {
 
