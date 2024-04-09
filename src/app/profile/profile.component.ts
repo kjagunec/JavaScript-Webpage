@@ -5,6 +5,8 @@ import {NavbarService} from "../shared/services/navbar.service";
 import {Post} from "../shared/models/post.model";
 import {PostService} from "../shared/services/post.service";
 import {Router} from "@angular/router";
+import {Product} from "../shared/models/product.model";
+import {Category} from "../shared/models/category.model";
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +19,29 @@ export class ProfileComponent implements OnInit{
   posts : Post[] = []
 
   editingPost : Post = new Post();
+  editingProduct : Product = new Product();
+  editingCategory : Category = new Category();
+  editingUser : User = new User();
+
+  newPost : Post = new Post();
+  newProduct : Product = new Product();
+  newCategory : Category = new Category();
+  newUser : User = new User();
+
+  showNewPost : boolean = false;
+  showNewProduct : boolean = false;
+  showNewCategory : boolean = false;
+  showNewUser : boolean = false;
+
+  newPostMessage : string = '';
+  newProductMessage : string = '';
+  newCategoryMessage : string = '';
+  newUserMessage : string = '';
+
+  newPostMessageClass : string = '';
+  newProductMessageClass : string = '';
+  newCategoryMessageClass : string = '';
+  newUserMessageClass : string = '';
 
   constructor(private authService:AuthService, private navService:NavbarService, private router:Router, private postService:PostService) {}
 
@@ -43,7 +68,7 @@ export class ProfileComponent implements OnInit{
     post.text = "text3";
     this.posts.push(post);
 
-    if (!this.authService.isAuthenticated()) this.router.navigate(['']);
+    //if (!this.authService.isAuthenticated()) this.router.navigate(['']);
 
     this.navService.checkCurrentRoute();
 
@@ -61,6 +86,11 @@ export class ProfileComponent implements OnInit{
 
 
     });
+
+    this.postService.addPostErrorEmitter.subscribe(res => {
+      this.newPostMessage = res.message;
+      this.newPostMessageClass = res.alert;
+    })
   }
 
   isAdmin() : boolean {
@@ -75,5 +105,16 @@ export class ProfileComponent implements OnInit{
     this.posts.forEach(p => {
       if (p.id == this.editingPost.id) p = this.editingPost;
     })
+  }
+
+  addNewPost() {
+    if (this.user) this.newPost.idUsers = this.user.id;
+    this.postService.addPost(this.newPost);
+  }
+
+  refreshNewPost() {
+    this.newPost = new Post();
+    this.newPostMessage = '';
+    this.newPostMessageClass = '';
   }
 }

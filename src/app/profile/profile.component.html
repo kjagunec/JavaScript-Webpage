@@ -1,6 +1,6 @@
 <div class="container-md">
-  <h1 class="my-5">{{user?.username}} korisnički račun</h1>
-  <div class="accordion accordion-flush">
+  <h1 class="mt-5">{{user?.username}} korisnički račun</h1>
+  <div class="accordion accordion-flush mt-3 mb-5">
     <section class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePosts" aria-expanded="false" aria-controls="flush-collapsePosts">
@@ -76,6 +76,48 @@
       </div>
     </section>
   </div>
+  <h1 *ngIf="isAdmin()" class="mt-5">Dodaj</h1>
+  <div *ngIf="isAdmin()" class="btn-group mt-3" role="group">
+    <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewUser=false; showNewProduct=false" name="btnradio" id="btnradioPost" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradioPost">Novost</label>
+
+    <input type="radio" class="btn-check" (change)="showNewProduct=true; showNewUser=false; showNewPost=false; showNewCategory=false" name="btnradio" id="btnradioProduct" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradioProduct">Proizvod</label>
+
+    <input type="radio" class="btn-check" (change)="showNewCategory=true; showNewProduct=false; showNewPost=false; showNewUser=false" name="btnradio" id="btnradioCategory" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradioCategory">Kategorija</label>
+
+    <input type="radio" class="btn-check" (change)="showNewUser=true; showNewPost=false; showNewProduct=false; showNewCategory=false" name="btnradio" id="btnradioUser" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradioUser">Korisnik</label>
+  </div>
+
+  <div class="mb-3" *ngIf="showNewPost">
+    <div class="form-floating mt-3">
+      <input type="text" class="form-control" [(ngModel)]="newPost.picture" id="newPostPictureUrl" placeholder="postPictureUrl">
+      <label for="newPostPictureUrl">Link na sliku</label>
+    </div>
+    <div class="form-floating mt-3">
+      <input type="text" class="form-control" [(ngModel)]="newPost.title" id="newPostTitle" placeholder="postTitle">
+      <label for="newPostTitle">Naslov objave</label>
+    </div>
+    <div class="form-floating mt-3">
+      <textarea type="text" class="form-control" [(ngModel)]="newPost.text" id="newPostText" placeholder="postText"></textarea>
+      <label for="newPostText">Tekst objave</label>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+      <img class="w-50" src="{{newPost.picture}}" alt="Slika objave nije važeća">
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="refreshNewPost()">Vrati na početak</button>
+      <button type="button" class="btn btn-primary" (click)="addNewPost()">Dodaj</button>
+    </div>
+    <div class="alert mt-2" [ngClass]="newPostMessageClass" role="alert">{{newPostMessage}}</div>
+
+  </div>
+
+  <form *ngIf="showNewProduct">Product</form>
+  <form *ngIf="showNewCategory">Category</form>
+  <form *ngIf="showNewUser">User</form>
 
   <!-- Modal -->
   <div class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
@@ -86,7 +128,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <img class="img-fluid" src="{{editingPost.picture}}" alt="post picture">
+          <img class="img-fluid" src="{{editingPost.picture}}" alt="Slika objave nije važeća">
           <div class="form-floating mt-3">
             <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl" placeholder="postPictureUrl">
             <label for="postPictureUrl">Link na sliku</label>
@@ -107,5 +149,4 @@
       </div>
     </div>
   </div>
-
 </div>

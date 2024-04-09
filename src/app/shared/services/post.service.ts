@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DataService} from "./data.service";
 import {Post} from "../models/post.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ export class PostService {
 
   private posts : Post[] = [];
   private postSubject : BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+  addPostErrorEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
   constructor(private dataService : DataService) {
     this.refreshPosts();
@@ -20,7 +21,8 @@ export class PostService {
       if (res.status == 'OK') {
         this.posts = res.rows;
         this.postSubject.next([...this.posts]);
-      } else console.log(res.status);
+      }
+      else console.log(res.status);
     })
   }
 
@@ -30,8 +32,14 @@ export class PostService {
 
   addPost(post : Post) {
     this.dataService.addPost(post).subscribe((res : {status:string, insertId:number}) => {
-      if (res.status == 'OK') this.refreshPosts();
-      else console.log(res.status);
+      if (res.status == 'OK') {
+        this.refreshPosts();
+        this.addPostErrorEmitter.next({message: 'Objava uspješno dodana!', alert: 'alert-success'});
+      }
+      else {
+        console.log(res.status);
+        this.addPostErrorEmitter.next({message: res.status, alert: 'alert-danger'});
+      }
     })
   }
 
