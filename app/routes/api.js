@@ -23,6 +23,8 @@ module.exports = function(express, pool, jwt, secret) {
 
   apiRouter.post('/users' ,async function(req, res) {
 
+    console.log("post request na users");
+
     let salt = require('crypto').randomBytes(128).toString('base64');
     let hash = require('crypto').pbkdf2Sync(req.body.password, salt, 10000, 64, 'sha512');
 
@@ -77,6 +79,8 @@ module.exports = function(express, pool, jwt, secret) {
 
   //users
   apiRouter.put('/users', async function(req, res) {
+
+    console.log("put request na users");
 
     const user = {
       id : req.body.id,

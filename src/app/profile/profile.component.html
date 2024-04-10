@@ -78,30 +78,27 @@
   </div>
   <h1 *ngIf="isAdmin()" class="mt-5">Dodaj</h1>
   <div *ngIf="isAdmin()" class="btn-group mt-3" role="group">
-    <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewUser=false; showNewProduct=false" name="btnradio" id="btnradioPost" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewProduct=false" name="btnradio" id="btnradioPost" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioPost">Novost</label>
 
-    <input type="radio" class="btn-check" (change)="showNewProduct=true; showNewUser=false; showNewPost=false; showNewCategory=false" name="btnradio" id="btnradioProduct" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewProduct=true; showNewPost=false; showNewCategory=false" name="btnradio" id="btnradioProduct" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioProduct">Proizvod</label>
 
-    <input type="radio" class="btn-check" (change)="showNewCategory=true; showNewProduct=false; showNewPost=false; showNewUser=false" name="btnradio" id="btnradioCategory" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewCategory=true; showNewProduct=false; showNewPost=false" name="btnradio" id="btnradioCategory" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioCategory">Kategorija</label>
-
-    <input type="radio" class="btn-check" (change)="showNewUser=true; showNewPost=false; showNewProduct=false; showNewCategory=false" name="btnradio" id="btnradioUser" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradioUser">Korisnik</label>
   </div>
 
-  <div class="mb-3" *ngIf="showNewPost">
+  <form class="mb-3" *ngIf="showNewPost">
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newPost.picture" id="newPostPictureUrl" placeholder="postPictureUrl">
+      <input type="text" class="form-control" [(ngModel)]="newPost.picture" id="newPostPictureUrl" placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
       <label for="newPostPictureUrl">Link na sliku</label>
     </div>
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newPost.title" id="newPostTitle" placeholder="postTitle">
+      <input type="text" class="form-control" [(ngModel)]="newPost.title" id="newPostTitle" placeholder="postTitle" [ngModelOptions]="{standalone: true}">
       <label for="newPostTitle">Naslov objave</label>
     </div>
     <div class="form-floating mt-3">
-      <textarea type="text" class="form-control" [(ngModel)]="newPost.text" id="newPostText" placeholder="postText"></textarea>
+      <textarea type="text" class="form-control" [(ngModel)]="newPost.text" id="newPostText" placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
       <label for="newPostText">Tekst objave</label>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -112,15 +109,47 @@
       <button type="button" class="btn btn-primary" (click)="addNewPost()">Dodaj</button>
     </div>
     <div class="alert mt-2" [ngClass]="newPostMessageClass" role="alert">{{newPostMessage}}</div>
+  </form>
 
-  </div>
+  <form class="mb-3" *ngIf="showNewProduct">
+    <div class="form-floating mt-3">
+      <input type="text" class="form-control" [(ngModel)]="newProduct.picture" id="newProductPictureUrl" placeholder="newProductPictureUrl" [ngModelOptions]="{standalone: true}">
+      <label for="newProductPictureUrl">Link na sliku</label>
+    </div>
+    <div class="form-floating mt-3">
+      <input type="text" class="form-control" [(ngModel)]="newProduct.name" id="newProductName" placeholder="newProductName" [ngModelOptions]="{standalone: true}">
+      <label for="newProductName">Ime proizvoda</label>
+    </div>
+    <div class="form-floating mt-3">
+      <select class="form-select" [(ngModel)]="newProduct.idCategories" id="categorySelect" [ngModelOptions]="{standalone: true}">
+        <option *ngFor="let c of categories; first as isFirst" [selected]="isFirst" value="{{c.id}}">{{c.name}}</option>
+      </select>
+      <label for="categorySelect">Kategorija proizvoda</label>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+      <img class="w-50" src="{{newProduct.picture}}" alt="Slika proizvoda nije važeća">
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="refreshNewProduct()">Vrati na početak</button>
+      <button type="button" class="btn btn-primary" (click)="addNewProduct()">Dodaj</button>
+    </div>
+    <div class="alert mt-2" [ngClass]="newPostMessageClass" role="alert">{{newPostMessage}}</div>
+  </form>
 
-  <form *ngIf="showNewProduct">Product</form>
-  <form *ngIf="showNewCategory">Category</form>
-  <form *ngIf="showNewUser">User</form>
+  <form class="mb-3" *ngIf="showNewCategory">
+    <div class="form-floating my-3">
+      <input type="text" class="form-control" [(ngModel)]="newCategory.name" id="newCategoryName" placeholder="newCategoryName" [ngModelOptions]="{standalone: true}">
+      <label for="newCategoryName">Ime kategorije</label>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="refreshNewCategory()">Vrati na početak</button>
+      <button type="button" class="btn btn-primary" (click)="addNewCategory()">Dodaj</button>
+    </div>
+    <div class="alert mt-2" [ngClass]="newCategoryMessageClass" role="alert">{{newCategoryMessage}}</div>
+  </form>
 
   <!-- Modal -->
-  <div class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
+  <form class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,15 +159,15 @@
         <div class="modal-body">
           <img class="img-fluid" src="{{editingPost.picture}}" alt="Slika objave nije važeća">
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl" placeholder="postPictureUrl">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl" placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
             <label for="postPictureUrl">Link na sliku</label>
           </div>
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingPost.title" id="postTitle" placeholder="postTitle">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.title" id="postTitle" placeholder="postTitle" [ngModelOptions]="{standalone: true}">
             <label for="postTitle">Naslov objave</label>
           </div>
           <div class="form-floating mt-3">
-            <textarea type="text" class="form-control" [(ngModel)]="editingPost.text" id="postText" placeholder="postText"></textarea>
+            <textarea type="text" class="form-control" [(ngModel)]="editingPost.text" id="postText" placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
             <label for="postText">Tekst objave</label>
           </div>
         </div>
@@ -148,5 +177,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </form>
 </div>

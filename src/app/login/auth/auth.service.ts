@@ -4,6 +4,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {environment} from "../../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {NavbarService} from "../../shared/services/navbar.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
   errorEmitter : Subject<string> = new Subject<string>();
   userChange : BehaviorSubject<User | null> = new BehaviorSubject<User | null>(this.user);
 
-  constructor(private httpClient:HttpClient, private router:Router) { }
+  constructor(private httpClient:HttpClient, private router:Router, private navbarService:NavbarService) { }
 
   login(credentials : {email:string, password:string}) {
 
@@ -89,7 +90,16 @@ export class AuthService {
 
           }
 
-        } else console.log(res.status);
+        }
+        /*else if (res.status == 'Wrong token') {
+
+          this.navbarService.getCurrentRoute().subscribe(route => {
+            if (route == '/profile') this.router.navigate(['']);
+            this.navbarService.getCurrentRoute().unsubscribe();
+          });
+          this.navbarService.checkCurrentRoute();
+
+        }*/ else console.log(res.status);
 
       })
     }

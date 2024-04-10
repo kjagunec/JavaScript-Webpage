@@ -7,6 +7,9 @@ import {PostService} from "../shared/services/post.service";
 import {Router} from "@angular/router";
 import {Product} from "../shared/models/product.model";
 import {Category} from "../shared/models/category.model";
+import {ProductService} from "../shared/services/product.service";
+import {CategoryService} from "../shared/services/category.service";
+import {UserService} from "../shared/services/user.service";
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +19,10 @@ import {Category} from "../shared/models/category.model";
 export class ProfileComponent implements OnInit{
 
   user : User | null = new User();
-  posts : Post[] = []
+  posts : Post[] = [];
+  products : Product[] = [];
+  categories : Category[] = [];
+  users : User[] = [];
 
   editingPost : Post = new Post();
   editingProduct : Product = new Product();
@@ -26,26 +32,33 @@ export class ProfileComponent implements OnInit{
   newPost : Post = new Post();
   newProduct : Product = new Product();
   newCategory : Category = new Category();
-  newUser : User = new User();
 
   showNewPost : boolean = false;
   showNewProduct : boolean = false;
   showNewCategory : boolean = false;
-  showNewUser : boolean = false;
 
   newPostMessage : string = '';
   newProductMessage : string = '';
   newCategoryMessage : string = '';
-  newUserMessage : string = '';
 
   newPostMessageClass : string = '';
   newProductMessageClass : string = '';
   newCategoryMessageClass : string = '';
-  newUserMessageClass : string = '';
 
-  constructor(private authService:AuthService, private navService:NavbarService, private router:Router, private postService:PostService) {}
+  constructor(
+    private authService : AuthService,
+    private navService : NavbarService,
+    private postService : PostService,
+    private productService : ProductService,
+    private categoryService : CategoryService,
+    private userService : UserService) {}
 
   ngOnInit() {
+
+    this.productService.getProducts().subscribe(res => this.products = res);
+    this.categoryService.getCategories().subscribe(res => this.categories = res);
+    this.userService.getUsers().subscribe(res => this.users = res);
+
     let post : Post = new Post();
 
     post.id = 1;
@@ -68,8 +81,6 @@ export class ProfileComponent implements OnInit{
     post.text = "text3";
     this.posts.push(post);
 
-    //if (!this.authService.isAuthenticated()) this.router.navigate(['']);
-
     this.navService.checkCurrentRoute();
 
     this.authService.userChange.subscribe(res => {
@@ -90,7 +101,12 @@ export class ProfileComponent implements OnInit{
     this.postService.addPostErrorEmitter.subscribe(res => {
       this.newPostMessage = res.message;
       this.newPostMessageClass = res.alert;
-    })
+    });
+
+    this.categoryService.addCategoryErrorEmitter.subscribe(res => {
+      this.newCategoryMessage = res.message;
+      this.newCategoryMessageClass = res.alert;
+    });
   }
 
   isAdmin() : boolean {
@@ -112,9 +128,30 @@ export class ProfileComponent implements OnInit{
     this.postService.addPost(this.newPost);
   }
 
+  addNewProduct() {
+    console.log(this.newProduct.idCategories);
+    //this.productService.addProduct(this.newProduct);
+  }
+
+  addNewCategory() {
+    this.categoryService.addCategory(this.newCategory);
+  }
+
   refreshNewPost() {
     this.newPost = new Post();
     this.newPostMessage = '';
     this.newPostMessageClass = '';
+  }
+
+  refreshNewProduct() {
+    this.newProduct = new Product();
+    this.newProductMessage = '';
+    this.newProductMessageClass = '';
+  }
+
+  refreshNewCategory() {
+    this.newCategory = new Category();
+    this.newCategoryMessage = '';
+    this.newCategoryMessageClass = '';
   }
 }

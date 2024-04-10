@@ -6,7 +6,7 @@ import {Subject} from "rxjs";
 })
 export class NavbarService {
 
-  routeChange : Subject<string> = new Subject<string>();
+  private routeChange : Subject<string> = new Subject<string>();
 
   constructor() { }
 

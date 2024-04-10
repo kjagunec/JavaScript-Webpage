@@ -14,8 +14,8 @@ export class DataService {
 
   private apiRootUsers : string = environment.API_URL + '/api/users';
   private apiRootPosts : string = environment.API_URL + '/api/posts';
-  private apiRootCategories : string = environment.API_URL + '/api/users';
-  private apiRootProducts : string = environment.API_URL + '/api/categories';
+  private apiRootCategories : string = environment.API_URL + '/api/categories';
+  private apiRootProducts : string = environment.API_URL + '/api/products';
 
   constructor(private http : HttpClient) { }
 
@@ -59,6 +59,7 @@ export class DataService {
   }
 
   addCategory(category : Category) {
+    console.log("add category" + category.name)
     return this.http.post<{status:string, insertId:number}>(this.apiRootCategories, category);
   }
 
