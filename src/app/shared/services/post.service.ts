@@ -10,7 +10,7 @@ export class PostService {
 
   private posts : Post[] = [];
   private postSubject : BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
-  addPostErrorEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
+  addPostEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
   constructor(private dataService : DataService) {
     this.refreshPosts();
@@ -34,11 +34,11 @@ export class PostService {
     this.dataService.addPost(post).subscribe((res : {status:string, insertId:number}) => {
       if (res.status == 'OK') {
         this.refreshPosts();
-        this.addPostErrorEmitter.next({message: 'Objava uspješno dodana!', alert: 'alert-success'});
+        this.addPostEmitter.next({message: 'Objava uspješno dodana!', alert: 'alert-success'});
       }
       else {
         console.log(res.status);
-        this.addPostErrorEmitter.next({message: res.status, alert: 'alert-danger'});
+        this.addPostEmitter.next({message: res.status, alert: 'alert-danger'});
       }
     })
   }

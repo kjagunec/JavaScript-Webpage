@@ -10,7 +10,7 @@ export class CategoryService {
 
   private categories : Category[] = [];
   private categorySubject : BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
-  addCategoryErrorEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
+  addCategoryEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
   constructor(private dataService : DataService) {
     this.refreshCategories();
@@ -33,11 +33,11 @@ export class CategoryService {
     this.dataService.addCategory(category).subscribe((res : {status:string, insertId:number}) => {
       if (res.status == 'OK') {
         this.refreshCategories();
-        this.addCategoryErrorEmitter.next({message: 'Kategorija uspješno dodana!', alert: 'alert-success'});
+        this.addCategoryEmitter.next({message: 'Kategorija uspješno dodana!', alert: 'alert-success'});
       }
       else {
         console.log(res.status);
-        this.addCategoryErrorEmitter.next({message: res.status, alert: 'alert-danger'});
+        this.addCategoryEmitter.next({message: res.status, alert: 'alert-danger'});
       }
     })
   }

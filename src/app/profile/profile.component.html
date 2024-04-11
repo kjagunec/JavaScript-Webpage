@@ -13,7 +13,7 @@
             <img src="{{p.picture}}" class="card-img-top" alt="post image">
             <div class="card-body">
               <h5 class="card-title">{{p.title}}</h5>
-              <p class="card-text" *ngIf="isAdmin()">Korisnik: </p>
+              <p class="card-text" *ngIf="isAdmin()">Korisnik: {{getUsernameById(p.idUsers)}}</p>
               <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
             </div>
           </div>
@@ -122,7 +122,7 @@
     </div>
     <div class="form-floating mt-3">
       <select class="form-select" [(ngModel)]="newProduct.idCategories" id="categorySelect" [ngModelOptions]="{standalone: true}">
-        <option *ngFor="let c of categories; first as isFirst" [selected]="isFirst" value="{{c.id}}">{{c.name}}</option>
+        <option *ngFor="let c of categories" value="{{c.id}}">{{c.name}}</option>
       </select>
       <label for="categorySelect">Kategorija proizvoda</label>
     </div>
@@ -133,7 +133,7 @@
       <button type="button" class="btn btn-outline-secondary me-2" (click)="refreshNewProduct()">Vrati na početak</button>
       <button type="button" class="btn btn-primary" (click)="addNewProduct()">Dodaj</button>
     </div>
-    <div class="alert mt-2" [ngClass]="newPostMessageClass" role="alert">{{newPostMessage}}</div>
+    <div class="alert mt-2" [ngClass]="newProductMessageClass" role="alert">{{newProductMessage}}</div>
   </form>
 
   <form class="mb-3" *ngIf="showNewCategory">

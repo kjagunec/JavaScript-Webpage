@@ -56,57 +56,45 @@ export class ProfileComponent implements OnInit{
   ngOnInit() {
 
     this.productService.getProducts().subscribe(res => this.products = res);
-    this.categoryService.getCategories().subscribe(res => this.categories = res);
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res;
+      if (this.categories[0]) this.newProduct.idCategories = this.categories[0].id;
+    });
     this.userService.getUsers().subscribe(res => this.users = res);
-
-    let post : Post = new Post();
-
-    post.id = 1;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/21_I15.png";
-    post.title = "Title ipsum";
-    post.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tincidunt interdum aliquam. Maecenas id felis eu sapien auctor consectetur nec. ";
-    this.posts.push(post);
-
-    post = new Post();
-    post.id = 2;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/23_I11.png";
-    post.title = "Title2";
-    post.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac tincidunt erat, mollis suscipit urna. Nam mollis metus a ullamcorper faucibus. Duis feugiat erat justo, nec elementum tortor porttitor facilisis. ";
-    this.posts.push(post);
-
-    post = new Post();
-    post.id = 3;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/34_i04.png";
-    post.title = "Title3";
-    post.text = "text3";
-    this.posts.push(post);
 
     this.navService.checkCurrentRoute();
 
     this.authService.userChange.subscribe(res => {
 
       this.user = res;
-      /*if (this.user) {
+      if (this.user) {
 
         if (this.user.admin) this.postService.getPosts().subscribe(posts => this.posts = posts);
         else this.postService.getPosts().subscribe(posts => this.posts = posts.filter(p => {
-          if(this.user) p.idUsers = this.user.id
+          if (this.user) return p.idUsers == this.user.id
+          else return false
         }));
 
-      }*/
+      }
 
 
     });
 
-    this.postService.addPostErrorEmitter.subscribe(res => {
+    this.postService.addPostEmitter.subscribe(res => {
       this.newPostMessage = res.message;
       this.newPostMessageClass = res.alert;
     });
 
-    this.categoryService.addCategoryErrorEmitter.subscribe(res => {
+    this.productService.addProductEmmiter.subscribe(res => {
+      this.newProductMessage = res.message;
+      this.newProductMessageClass = res.alert;
+    })
+
+    this.categoryService.addCategoryEmitter.subscribe(res => {
       this.newCategoryMessage = res.message;
       this.newCategoryMessageClass = res.alert;
     });
+
   }
 
   isAdmin() : boolean {
@@ -129,8 +117,7 @@ export class ProfileComponent implements OnInit{
   }
 
   addNewProduct() {
-    console.log(this.newProduct.idCategories);
-    //this.productService.addProduct(this.newProduct);
+    this.productService.addProduct(this.newProduct);
   }
 
   addNewCategory() {
@@ -145,6 +132,7 @@ export class ProfileComponent implements OnInit{
 
   refreshNewProduct() {
     this.newProduct = new Product();
+    this.newProduct.idCategories = this.categories[0].id;
     this.newProductMessage = '';
     this.newProductMessageClass = '';
   }
@@ -153,5 +141,9 @@ export class ProfileComponent implements OnInit{
     this.newCategory = new Category();
     this.newCategoryMessage = '';
     this.newCategoryMessageClass = '';
+  }
+
+  getUsernameById(id : number) {
+    return this.userService.getUser(id)?.username;
   }
 }

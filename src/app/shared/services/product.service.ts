@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Product} from "../models/product.model";
 
@@ -10,6 +10,7 @@ export class ProductService {
 
   private products : Product[] = [];
   private productSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+  addProductEmmiter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
   constructor(private dataService : DataService) {
     this.refreshProducts();
@@ -30,8 +31,14 @@ export class ProductService {
 
   addProduct(product : Product) {
     this.dataService.addProduct(product).subscribe((res : {status:string, insertId:number}) => {
-      if (res.status == 'OK') this.refreshProducts();
-      else console.log(res.status);
+      if (res.status == 'OK') {
+        this.refreshProducts();
+        this.addProductEmmiter.next({message: 'Proizvod uspješno dodan!', alert: 'alert-success'});
+      }
+      else {
+        console.log(res.status);
+        this.addProductEmmiter.next({message: res.status, alert: 'alert-danger'});
+      }
     })
   }
 
