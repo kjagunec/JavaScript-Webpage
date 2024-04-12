@@ -53,4 +53,11 @@ export class PostService {
       else console.log(res.status);
     })
   }
+
+  editPost(post : Post) {
+    this.dataService.editPost(post).subscribe((res : {status:string, changedRows:number}) => {
+      if (res.status == 'OK') this.refreshPosts();
+      else console.log(res.status);
+    })
+  }
 }

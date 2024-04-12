@@ -8,6 +8,7 @@
         </button>
       </h2>
       <div id="flush-collapsePosts" class="accordion-collapse collapse row row-cols-1 row-cols-lg-4 row-cols-md-2">
+        <p *ngIf="posts.length == 0" class="mt-3">Trenutno nemate svojih novosti</p>
         <article class="col accordion-body" *ngFor="let p of posts">
           <div class="card border-0">
             <img src="{{p.picture}}" class="card-img-top" alt="post image">
@@ -15,6 +16,7 @@
               <h5 class="card-title">{{p.title}}</h5>
               <p class="card-text" *ngIf="isAdmin()">Korisnik: {{getUsernameById(p.idUsers)}}</p>
               <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
+              <button type="button" class="btn btn-danger ms-2" (click)="removePost(p.id)" *ngIf="isAdmin()">Ukloni</button>
             </div>
           </div>
         </article>
@@ -27,18 +29,12 @@
         </button>
       </h2>
       <div id="flush-collapseProducts" class="accordion-collapse collapse row row-cols-1 row-cols-lg-4 row-cols-md-2">
-        <article class="col card border-0 accordion-body">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
+        <article class="col card border-0 accordion-body" *ngFor="let p of products">
+          <img src="{{p.picture}}" class="card-img-top" alt="Slika proizvoda">
           <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
+            <h5 class="card-title text-center">{{p.name}}</h5>
             <button class="btn btn-warning mt-1">Uredi</button>
-          </div>
-        </article>
-        <article class="col card border-0 accordion-body">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-          <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <button class="btn btn-warning mt-1">Uredi</button>
+            <button type="button" class="btn btn-danger ms-2" (click)="removeProduct(p.id)">Ukloni</button>
           </div>
         </article>
       </div>
@@ -51,11 +47,13 @@
       </h2>
       <div id="flush-collapseCategories" class="accordion-collapse collapse">
         <ul class="list-group list-group-flush accordion-body">
-          <li class="list-group-item">An item</li>
-          <li class="list-group-item">A second item</li>
-          <li class="list-group-item">A third item</li>
-          <li class="list-group-item">A fourth item</li>
-          <li class="list-group-item">And a fifth one</li>
+          <li class="list-group-item" *ngFor="let c of categories">
+            <input type="text" class="form-control" *ngIf="editingCategory.id == c.id; else noEdit" [(ngModel)]="editingCategory.name" id="editingCategoryName" placeholder="editingCategoryName" [ngModelOptions]="{standalone: true}">
+            <ng-template #noEdit>{{c.name}}</ng-template>
+            <button type="button" class="btn btn-warning ms-3" *ngIf="editingCategory.id == 0">Edit</button>
+            <button type="button" class="btn btn-primary ms-3" *ngIf="editingCategory.id == c.id">Save</button>
+            <button type="button" class="btn btn-outline-secondary ms-3" *ngIf="editingCategory.id == c.id">Cancel</button>
+          </li>
         </ul>
       </div>
     </section>
@@ -67,17 +65,13 @@
       </h2>
       <div id="flush-collapseUsers" class="accordion-collapse collapse">
         <ul class="list-group list-group-flush accordion-body">
-          <li class="list-group-item">An item</li>
-          <li class="list-group-item">A second item</li>
-          <li class="list-group-item">A third item</li>
-          <li class="list-group-item">A fourth item</li>
-          <li class="list-group-item">And a fifth one</li>
+          <li class="list-group-item" *ngFor="let u of users">{{u.username}}</li>
         </ul>
       </div>
     </section>
   </div>
   <h1 *ngIf="isAdmin()" class="mt-5">Dodaj</h1>
-  <div *ngIf="isAdmin()" class="btn-group mt-3" role="group">
+  <div *ngIf="isAdmin()" class="btn-group my-3" role="group">
     <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewProduct=false" name="btnradio" id="btnradioPost" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioPost">Novost</label>
 

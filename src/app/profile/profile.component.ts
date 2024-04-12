@@ -105,10 +105,28 @@ export class ProfileComponent implements OnInit{
     this.editingPost = {...post};
   }
 
+  editProduct(product : Product) {
+    this.editingProduct = {...product};
+  }
+
+  editCategory(category : Category) {
+    this.editingCategory = {...category};
+  }
+
+  editUser(user : User) {
+    this.editingUser = {...user};
+  }
+
   saveEditPost() {
-    this.posts.forEach(p => {
-      if (p.id == this.editingPost.id) p = this.editingPost;
-    })
+    this.postService.editPost(this.editingPost);
+  }
+
+  removePost(postId : number) {
+    this.postService.deletePost(postId);
+  }
+
+  removeProduct(productId : number) {
+    this.productService.deleteProduct(productId);
   }
 
   addNewPost() {
@@ -144,6 +162,8 @@ export class ProfileComponent implements OnInit{
   }
 
   getUsernameById(id : number) {
-    return this.userService.getUser(id)?.username;
+    let user = this.userService.getUser(id);
+    if (user) return user.username;
+    else return "Nevažeći id";
   }
 }

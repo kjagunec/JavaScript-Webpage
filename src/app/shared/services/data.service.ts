@@ -50,7 +50,7 @@ export class DataService {
   }
 
   editPost(post : Post) {
-    return this.http.put(this.apiRootPosts, post);
+    return this.http.put<{status:string, changedRows:number}>(this.apiRootPosts, post);
   }
 
   //categories

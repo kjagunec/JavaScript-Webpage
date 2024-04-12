@@ -121,7 +121,7 @@ module.exports = function(express, pool, jwt, secret) {
   }).put(async function(req, res) {
 
     const news = {
-      id : req.id,
+      id : req.body.id,
       title : req.body.title,
       text : req.body.text,
       picture : req.body.picture,
