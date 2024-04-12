@@ -3,6 +3,8 @@ import {Post} from "../shared/models/post.model";
 import {Product} from "../shared/models/product.model";
 import {PostService} from "../shared/services/post.service";
 import {NavbarService} from "../shared/services/navbar.service";
+import {Category} from "../shared/models/category.model";
+import {CategoryService} from "../shared/services/category.service";
 
 @Component({
   selector: 'app-main',
@@ -12,46 +14,19 @@ import {NavbarService} from "../shared/services/navbar.service";
 export class MainComponent implements OnInit {
 
   posts : Post[] = [];
-  categories : string[] = [];
+  categories : Category[] = [];
   products : Product[] = [];
 
-  constructor(private postService:PostService, private navbar:NavbarService) { }
+  constructor(private postService:PostService, private categoryService:CategoryService, private navbar:NavbarService) { }
 
   ngOnInit(): void {
-    /*this.postService.getPosts().subscribe((res : Post[]) => {
-      this.posts = res;
-    });*/
+    this.postService.getPosts().subscribe((res : Post[]) => this.posts = res);
+
+    this.categoryService.getCategories().subscribe((res : Category[]) => this.categories = res);
 
     this.navbar.checkCurrentRoute();
 
-    let post : Post = new Post();
     let product : Product = new Product();
-
-    post.id = 1;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/21_I15.png";
-    post.title = "Title ipsum";
-    post.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tincidunt interdum aliquam. Maecenas id felis eu sapien auctor consectetur nec. ";
-    this.posts.push(post);
-
-    post = new Post();
-    post.id = 2;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/23_I11.png";
-    post.title = "Title2";
-    post.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac tincidunt erat, mollis suscipit urna. Nam mollis metus a ullamcorper faucibus. Duis feugiat erat justo, nec elementum tortor porttitor facilisis. ";
-    this.posts.push(post);
-
-    post = new Post();
-    post.id = 3;
-    post.picture = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/images/34_i04.png";
-    post.title = "Title3";
-    post.text = "text3";
-    this.posts.push(post);
-
-    this.categories.push("Mlijeko");
-    this.categories.push("Vrhnja");
-    this.categories.push("Maslac, kajmaci i namazi");
-    this.categories.push("Sirutka i mlaćenica");
-    this.categories.push("Svi proizvodi");
 
     product.name = "Jogurt";
     product.picture = "https://static5.depositphotos.com/1016154/461/i/950/depositphotos_4616605-stock-photo-yogurt.jpg";

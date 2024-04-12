@@ -6,11 +6,12 @@ import {UnknownModule} from "./unknown/unknown.module";
 import {LoginModule} from "./login/login.module";
 import {AuthService} from "./login/auth/auth.service";
 import {ProfileModule} from "./profile/profile.module";
+import {NewsModule} from "./news/news.module";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarModule, MainModule, UnknownModule, LoginModule, ProfileModule],
+  imports: [RouterOutlet, NavbarModule, MainModule, UnknownModule, LoginModule, ProfileModule, NewsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

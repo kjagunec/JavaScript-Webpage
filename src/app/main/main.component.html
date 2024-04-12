@@ -12,39 +12,6 @@
         </div>
       </div>
     </article>
-    <!--<article class="col">
-      <div class="card border-0">
-        <a href="/">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-        </a>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        </div>
-      </div>
-    </article>
-    <article class="col">
-      <div class="card border-0">
-        <a href="/">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-        </a>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        </div>
-      </div>
-    </article>
-    <article class="col">
-      <div class="card border-0">
-        <a href="/">
-          <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-        </a>
-        <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        </div>
-      </div>
-    </article>-->
   </div>
 </section>
 <section class="container-md border-bottom pb-3">
@@ -57,22 +24,8 @@
   <div class="btn-group d-flex mb-4" role="group">
     @for (category of categories; track category; let index = $index) {
       <input type="radio" class="btn-check" name="btnradio" id="btnradio{{index}}" autocomplete="off">
-      <label class="btn btn-outline-primary" for="btnradio{{index}}">{{category}}</label>
+      <label class="btn btn-outline-primary" for="btnradio{{index}}">{{category.name}}</label>
     }
-    <!--<input *ngFor="let category of categories; index as i" type="radio" class="btn-check" name="btnradio" id="btnradio{{i}}" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio{{i}}">{{category}}</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio2">Vrhnja</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio3">Maslac, kajmaci i namazi</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio4">Sirutka i mlaćenica</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio5">Svi proizvodi</label>-->
   </div>
   <div id="carousel" class="carousel slide w-25 mx-auto">
     <div class="carousel-inner">
