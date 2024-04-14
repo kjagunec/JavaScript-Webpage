@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Product} from "../models/product.model";
+import {Post} from "../models/post.model";
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,13 @@ export class ProductService {
 
   deleteProduct(productId : number) {
     this.dataService.deleteProduct(productId).subscribe((res : {status:string, affectedRows:number}) => {
+      if (res.status == 'OK') this.refreshProducts();
+      else console.log(res.status);
+    })
+  }
+
+  editProduct(product : Product) {
+    this.dataService.editProduct(product).subscribe((res : {status:string, changedRows:number}) => {
       if (res.status == 'OK') this.refreshProducts();
       else console.log(res.status);
     })

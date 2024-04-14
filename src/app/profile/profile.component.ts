@@ -121,6 +121,10 @@ export class ProfileComponent implements OnInit{
     this.postService.editPost(this.editingPost);
   }
 
+  saveEditProduct() {
+    this.productService.editProduct(this.editingProduct);
+  }
+
   removePost(postId : number) {
     this.postService.deletePost(postId);
   }

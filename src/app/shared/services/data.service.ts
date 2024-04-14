@@ -33,7 +33,7 @@ export class DataService {
   }
 
   editUser(user : User) {
-    return this.http.put(this.apiRootUsers, user);
+    return this.http.put<{status:string, changedRows:number}>(this.apiRootUsers, user);
   }
 
   //posts
@@ -68,7 +68,7 @@ export class DataService {
   }
 
   editCategory(category : Category) {
-    return this.http.put(this.apiRootCategories, category);
+    return this.http.put<{status:string, changedRows:number}>(this.apiRootCategories, category);
   }
 
   //products
@@ -85,6 +85,6 @@ export class DataService {
   }
 
   editProduct(product : Product) {
-    return this.http.put(this.apiRootProducts, product);
+    return this.http.put<{status:string, changedRows:number}>(this.apiRootProducts, product);
   }
 }

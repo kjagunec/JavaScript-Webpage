@@ -15,7 +15,7 @@
             <div class="card-body">
               <h5 class="card-title">{{p.title}}</h5>
               <p class="card-text" *ngIf="isAdmin()">Korisnik: {{getUsernameById(p.idUsers)}}</p>
-              <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
+              <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
               <button type="button" class="btn btn-danger ms-2" (click)="removePost(p.id)" *ngIf="isAdmin()">Ukloni</button>
             </div>
           </div>
@@ -33,7 +33,7 @@
           <img src="{{p.picture}}" class="card-img-top" alt="Slika proizvoda">
           <div class="card-body">
             <h5 class="card-title text-center">{{p.name}}</h5>
-            <button class="btn btn-warning mt-1">Uredi</button>
+            <button class="btn btn-warning mt-1" data-bs-toggle="modal" data-bs-target="#modalProduct" (click)="editProduct(p)">Uredi</button>
             <button type="button" class="btn btn-danger ms-2" (click)="removeProduct(p.id)">Ukloni</button>
           </div>
         </article>
@@ -147,7 +147,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="modalPostLabel">Edit post {{editingPost.title}}</h1>
+          <h1 class="modal-title fs-5" id="modalPostLabel">Uredi objavu {{editingPost.title}}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -168,6 +168,38 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
           <button type="button" class="btn btn-primary" (click)="saveEditPost()" data-bs-dismiss="modal">Spremi</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form class="modal fade" id="modalProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalProductLabel">Uredi proizvod {{editingProduct.name}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img class="img-fluid" src="{{editingProduct.picture}}" alt="Slika proizvoda nije važeća">
+          <div class="form-floating mt-3">
+            <input type="text" class="form-control" [(ngModel)]="editingProduct.picture" id="productPictureUrl" placeholder="productPictureUrl" [ngModelOptions]="{standalone: true}">
+            <label for="productPictureUrl">Link na sliku</label>
+          </div>
+          <div class="form-floating mt-3">
+            <input type="text" class="form-control" [(ngModel)]="editingProduct.name" id="editingProductName" placeholder="editingProductName" [ngModelOptions]="{standalone: true}">
+            <label for="editingProductName">Ime proizvoda</label>
+          </div>
+          <div class="form-floating mt-3">
+            <select class="form-select" [(ngModel)]="editingProduct.idCategories" id="categorySelectforEdit" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let c of categories" value="{{c.id}}">{{c.name}}</option>
+            </select>
+            <label for="categorySelectforEdit">Kategorija proizvoda</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
+          <button type="button" class="btn btn-primary" (click)="saveEditProduct()" data-bs-dismiss="modal">Spremi</button>
         </div>
       </div>
     </div>
