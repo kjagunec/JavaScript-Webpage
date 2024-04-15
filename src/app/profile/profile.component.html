@@ -48,11 +48,11 @@
       <div id="flush-collapseCategories" class="accordion-collapse collapse">
         <ul class="list-group list-group-flush accordion-body">
           <li class="list-group-item" *ngFor="let c of categories">
-            <input type="text" class="form-control" *ngIf="editingCategory.id == c.id; else noEdit" [(ngModel)]="editingCategory.name" id="editingCategoryName" placeholder="editingCategoryName" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control mb-2" *ngIf="editingCategory.id == c.id; else noEdit" [(ngModel)]="editingCategory.name" id="editingCategoryName" placeholder="ime kategorije" [ngModelOptions]="{standalone: true}">
             <ng-template #noEdit>{{c.name}}</ng-template>
-            <button type="button" class="btn btn-warning ms-3" *ngIf="editingCategory.id == 0">Edit</button>
-            <button type="button" class="btn btn-primary ms-3" *ngIf="editingCategory.id == c.id">Save</button>
-            <button type="button" class="btn btn-outline-secondary ms-3" *ngIf="editingCategory.id == c.id">Cancel</button>
+            <button type="button" class="btn btn-warning ms-3" *ngIf="editingCategory.id == 0" (click)="editCategory(c)">Uredi</button>
+            <button type="button" class="btn btn-primary" *ngIf="editingCategory.id == c.id" (click)="saveEditCategory()">Spremi</button>
+            <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="editingCategory.id == c.id" (click)="resetCategory()">Otkaži</button>
           </li>
         </ul>
       </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Category} from "../models/category.model";
+import {Post} from "../models/post.model";
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,13 @@ export class CategoryService {
 
   deleteCategory(categoryId : number) {
     this.dataService.deleteCategory(categoryId).subscribe((res : {status:string, affectedRows:number}) => {
+      if (res.status == 'OK') this.refreshCategories();
+      else console.log(res.status);
+    })
+  }
+
+  editCategory(category : Category) {
+    this.dataService.editCategory(category).subscribe((res : {status:string, changedRows:number}) => {
       if (res.status == 'OK') this.refreshCategories();
       else console.log(res.status);
     })
