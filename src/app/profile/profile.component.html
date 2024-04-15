@@ -65,8 +65,18 @@
       </h2>
       <div id="flush-collapseUsers" class="accordion-collapse collapse">
         <ul class="list-group list-group-flush accordion-body">
-          <li class="list-group-item" *ngFor="let u of users">{{u.username}}</li>
+          <li class="list-group-item d-flex" *ngFor="let u of editingUsers; index as i">
+            <div>{{u.username}}</div>
+            <div class="form-check ms-3">
+              <input class="form-check-input" type="checkbox" (click)="showSaveChanges=true" [(ngModel)]="u.admin" id="adminCheckbox{{i}}">
+              <label class="form-check-label" for="adminCheckbox{{i}}">
+                Admin ovlasti
+              </label>
+            </div>
+          </li>
         </ul>
+        <button type="button" class="btn btn-primary" *ngIf="showSaveChanges" (click)="saveEditUsers()">Spremi</button>
+        <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="showSaveChanges" (click)="resetEditUsers()">Otkaži</button>
       </div>
     </section>
   </div>

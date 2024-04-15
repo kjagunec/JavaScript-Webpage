@@ -59,4 +59,13 @@ export class UserService {
       }
     })
   }
+
+  editUsers(users : User[]) {
+    users.forEach(u => {
+      this.dataService.editUser(u).subscribe(res => {
+        if (res.status == 'OK') this.refreshUsers();
+        else console.log(res.status);
+      })
+    })
+  }
 }

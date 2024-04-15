@@ -4,7 +4,6 @@ import {User} from "../shared/models/user.model";
 import {NavbarService} from "../shared/services/navbar.service";
 import {Post} from "../shared/models/post.model";
 import {PostService} from "../shared/services/post.service";
-import {Router} from "@angular/router";
 import {Product} from "../shared/models/product.model";
 import {Category} from "../shared/models/category.model";
 import {ProductService} from "../shared/services/product.service";
@@ -27,7 +26,7 @@ export class ProfileComponent implements OnInit{
   editingPost : Post = new Post();
   editingProduct : Product = new Product();
   editingCategory : Category = new Category();
-  editingUser : User = new User();
+  editingUsers : User[] = [];
 
   newPost : Post = new Post();
   newProduct : Product = new Product();
@@ -45,6 +44,8 @@ export class ProfileComponent implements OnInit{
   newProductMessageClass : string = '';
   newCategoryMessageClass : string = '';
 
+  showSaveChanges : boolean = false;
+
   constructor(
     private authService : AuthService,
     private navService : NavbarService,
@@ -60,7 +61,11 @@ export class ProfileComponent implements OnInit{
       this.categories = res;
       if (this.categories[0]) this.newProduct.idCategories = this.categories[0].id;
     });
-    this.userService.getUsers().subscribe(res => this.users = res);
+    this.userService.getUsers().subscribe(res => {
+      this.users = res;
+      this.editingUsers = [];
+      this.users.forEach(u => this.editingUsers.push({...u}));
+    });
 
     this.navService.checkCurrentRoute();
 
@@ -113,10 +118,6 @@ export class ProfileComponent implements OnInit{
     this.editingCategory = {...category};
   }
 
-  editUser(user : User) {
-    this.editingUser = {...user};
-  }
-
   saveEditPost() {
     this.postService.editPost(this.editingPost);
   }
@@ -130,8 +131,19 @@ export class ProfileComponent implements OnInit{
     this.resetCategory();
   }
 
+  saveEditUsers() {
+    this.userService.editUsers([...this.editingUsers]);
+    this.resetEditUsers();
+  }
+
   resetCategory() {
     this.editingCategory = new Category();
+  }
+
+  resetEditUsers() {
+    this.editingUsers = [];
+    this.users.forEach(u => this.editingUsers.push({...u}));
+    this.showSaveChanges = false;
   }
 
   removePost(postId : number) {
