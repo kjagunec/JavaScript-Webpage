@@ -9,6 +9,8 @@ import {Category} from "../shared/models/category.model";
 import {ProductService} from "../shared/services/product.service";
 import {CategoryService} from "../shared/services/category.service";
 import {UserService} from "../shared/services/user.service";
+import {FormGroup} from "@angular/forms";
+import {FormService} from "../shared/services/form.service";
 
 @Component({
   selector: 'app-profile',
@@ -46,13 +48,17 @@ export class ProfileComponent implements OnInit{
 
   showSaveChanges : boolean = false;
 
+  editUserForm! : FormGroup;
+  editUserMessage : string = '';
+
   constructor(
     private authService : AuthService,
     private navService : NavbarService,
     private postService : PostService,
     private productService : ProductService,
     private categoryService : CategoryService,
-    private userService : UserService) {}
+    private userService : UserService,
+    private formService : FormService) {}
 
   ngOnInit() {
 
@@ -99,6 +105,8 @@ export class ProfileComponent implements OnInit{
       this.newCategoryMessage = res.message;
       this.newCategoryMessageClass = res.alert;
     });
+
+    this.editUserForm = this.formService.getUserForm();
 
   }
 
@@ -190,5 +198,11 @@ export class ProfileComponent implements OnInit{
     let user = this.userService.getUser(id);
     if (user) return user.username;
     else return "Nevažeći id";
+  }
+
+  onEditUserSubmit() {
+
+    this.editUserMessage = this.formService.formCheck(this.editUserForm, false);
+
   }
 }

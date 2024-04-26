@@ -1,5 +1,31 @@
 <div class="container-md">
   <h1 class="mt-5">{{user?.username}} korisnički račun</h1>
+  <h3 class="text-center">Registracija</h3>
+  <form (submit)="onRegisterSubmit()" [formGroup]="registerForm">
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" [ngClass]="checkIfValid(registerForm, 'email')" formControlName="email" id="registerEmail" placeholder="name@example.com">
+      <label for="registerEmail">E-Mail adresa</label>
+      <div class="invalid-feedback">{{registerEmailMessage}}</div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password1')" formControlName="password1" id="registerPassword1" placeholder="Password">
+      <label for="registerPassword1">Lozinka</label>
+      <div class="invalid-feedback">Obavezno polje!</div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password2')" formControlName="password2" id="registerPassword2" placeholder="Password">
+      <label for="registerPassword2">Ponovi lozinku</label>
+      <div class="invalid-feedback">Obavezno polje!</div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" [ngClass]="checkIfValid(registerForm, 'username')" formControlName="username" id="registerUsername" placeholder="Username">
+      <label for="registerUsername">Korisničko ime</label>
+      <div class="invalid-feedback">Obavezno polje!</div>
+    </div>
+    <div *ngIf="registerErrorMessage != ''" class="alert alert-danger" role="alert">{{registerErrorMessage}}</div>
+    <div *ngIf="registerSuccessMessage != ''" class="alert alert-success" role="alert">{{registerSuccessMessage}}</div>
+    <button type="submit" class="btn btn-secondary" [disabled]="!registerForm.valid">Registriraj se</button>
+  </form>
   <div class="accordion accordion-flush mt-3 mb-5">
     <section class="accordion-item">
       <h2 class="accordion-header">
@@ -152,7 +178,7 @@
     <div class="alert mt-2" [ngClass]="newCategoryMessageClass" role="alert">{{newCategoryMessage}}</div>
   </form>
 
-  <!-- Modal -->
+  <!-- Modals -->
   <form class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">

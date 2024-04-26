@@ -61,11 +61,14 @@ export class UserService {
   }
 
   editUsers(users : User[]) {
-    users.forEach(u => {
-      this.dataService.editUser(u).subscribe(res => {
-        if (res.status == 'OK') this.refreshUsers();
-        else console.log(res.status);
-      })
+    users.forEach(u => this.editUser(u))
+  }
+
+  editUser(user : User) {
+    this.dataService.editUser(user).subscribe(res => {
+      if (res.status == 'OK') this.refreshUsers();
+      else console.log(res.status);
     })
   }
+
 }
