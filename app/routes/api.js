@@ -78,16 +78,35 @@ module.exports = function(express, pool, jwt, secret) {
   //users
   apiRouter.put('/users', async function(req, res) {
 
-    const user = {
-      id : req.body.id,
-      email : req.body.email,
-      password : req.body.password,
-      username : req.body.username,
-      admin : req.body.admin,
-      salt : req.body.salt
-    };
+    let password = req.body.password;
+    let user;
+
+    if (password === "") {
+
+      user = {
+        id : req.body.id,
+        email : req.body.email,
+        username : req.body.username,
+        admin : req.body.admin,
+        salt : req.body.salt
+      };
+
+    } else {
+
+      user = {
+        id : req.body.id,
+        email : req.body.email,
+        password : require('crypto').pbkdf2Sync(password, req.body.salt, 10000, 64, 'sha512').toString('hex'),
+        username : req.body.username,
+        admin : req.body.admin,
+        salt : req.body.salt
+      };
+
+    }
 
     await put(res, 'users', user);
+
+    //treba provjerit jel edit sad ok i treba napravit da se token osvježava ili nekaj
 
   });
 

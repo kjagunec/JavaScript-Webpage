@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators, ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {User} from "../models/user.model";
 import {UserService} from "./user.service";
 import {AuthService} from "../../login/auth/auth.service";
@@ -10,9 +10,13 @@ import {AuthService} from "../../login/auth/auth.service";
 export class FormService {
 
   users : User[] = []
+  user : User = new User();
 
   constructor(private userService:UserService, private authService:AuthService, private fb:FormBuilder) {
+
     this.userService.getUsers().subscribe(res => this.users = res);
+    this.authService.userChange.subscribe(res => this.user = res);
+
   }
 
   getLoginForm() : FormGroup {
@@ -22,7 +26,7 @@ export class FormService {
     });
   }
 
-  getUserForm() : FormGroup {
+  getRegisterForm() : FormGroup {
     return this.fb.group({
       'email' : new FormControl('', [Validators.email, Validators.required]),
       'password1' : new FormControl('', Validators.required),
@@ -31,16 +35,31 @@ export class FormService {
     });
   }
 
-  checkIfValid(form:FormGroup, name:string) : string {
+  getEditForm() : FormGroup {
+    return this.fb.group({
+      'email' : new FormControl(this.user.email, [Validators.email, Validators.required]),
+      'password1' : new FormControl(''),
+      'password2' : new FormControl(''),
+      'username' : new FormControl(this.user.username, Validators.required)
+    });
+  }
+
+  checkIfValid(form:FormGroup, name:string, readonly:boolean) : string {
+
+    let bootstrapClass : string = "form-control";
+
+    if (readonly) {
+      return bootstrapClass + "-plaintext";
+    }
 
     if (form.controls[name].status == 'VALID') {
-      return 'is-valid';
+      return bootstrapClass + " is-valid";
     }
     else if (form.controls[name].status == 'INVALID' && !form.controls[name].pristine) {
-      return 'is-invalid';
+      return bootstrapClass + " is-invalid";
     }
     else {
-      return '';
+      return bootstrapClass;
     }
 
   }
@@ -53,7 +72,7 @@ export class FormService {
 
     } else {
 
-      if (this.users.find((u : User) => form.value['email'] === u.email)) {
+      if (this.users.find((u : User) => form.value['email'] === u.email && u.id != this.user.id)) {
 
         return 'Već postoji korisnički račun s tom e-mail adresom!';
 
@@ -90,14 +109,18 @@ export class FormService {
 
   private editUserFromForm(form : FormGroup) {
 
-    let user : User | null = this.authService.getUser();
-    if (user) {
+    let user : User = {...this.user};
+    if (user.id != 0) {
 
       user.email = form.value['email'];
       user.password = form.value['password1'];
       user.username = form.value['username'];
 
-      this.userService.editUser(user);
+      this.userService.editCurrentUser(user);
+
+    } else {
+
+      console.log("Korisnik nije prijavljen");
 
     }
 

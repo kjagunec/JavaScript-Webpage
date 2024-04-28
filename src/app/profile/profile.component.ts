@@ -9,7 +9,7 @@ import {Category} from "../shared/models/category.model";
 import {ProductService} from "../shared/services/product.service";
 import {CategoryService} from "../shared/services/category.service";
 import {UserService} from "../shared/services/user.service";
-import {FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {FormService} from "../shared/services/form.service";
 
 @Component({
@@ -19,7 +19,7 @@ import {FormService} from "../shared/services/form.service";
 })
 export class ProfileComponent implements OnInit{
 
-  user : User | null = new User();
+  user : User = new User();
   posts : Post[] = [];
   products : Product[] = [];
   categories : Category[] = [];
@@ -46,21 +46,33 @@ export class ProfileComponent implements OnInit{
   newProductMessageClass : string = '';
   newCategoryMessageClass : string = '';
 
-  showSaveChanges : boolean = false;
+  showSaveChangesForAdmin : boolean = false;
 
   editUserForm! : FormGroup;
-  editUserMessage : string = '';
+  formControlEmail! : FormControl;
+  formControlUsername! : FormControl;
+  editUserReadonly : boolean = true;
+
+  editUserMessageSuccess : string = '';
+  editUserMessageError : string = '';
+  editUserEmailMessage: string = '';
+
+
 
   constructor(
-    private authService : AuthService,
-    private navService : NavbarService,
-    private postService : PostService,
-    private productService : ProductService,
+    private authService :     AuthService,
+    private navService :      NavbarService,
+    private postService :     PostService,
+    private productService :  ProductService,
     private categoryService : CategoryService,
-    private userService : UserService,
-    private formService : FormService) {}
+    private userService :     UserService,
+    private formService :     FormService) {}
 
   ngOnInit() {
+
+    this.editUserForm = this.formService.getEditForm();
+    this.formControlEmail = this.editUserForm.controls['email'] as FormControl;
+    this.formControlUsername = this.editUserForm.controls['username'] as FormControl;
 
     this.productService.getProducts().subscribe(res => this.products = res);
     this.categoryService.getCategories().subscribe(res => {
@@ -70,7 +82,10 @@ export class ProfileComponent implements OnInit{
     this.userService.getUsers().subscribe(res => {
       this.users = res;
       this.editingUsers = [];
-      this.users.forEach(u => this.editingUsers.push({...u}));
+      this.users.forEach(u => {
+        u.password = "";
+        this.editingUsers.push({...u})
+      });
     });
 
     this.navService.checkCurrentRoute();
@@ -78,13 +93,18 @@ export class ProfileComponent implements OnInit{
     this.authService.userChange.subscribe(res => {
 
       this.user = res;
-      if (this.user) {
+      if (this.user.id != 0) {
 
-        if (this.user.admin) this.postService.getPosts().subscribe(posts => this.posts = posts);
-        else this.postService.getPosts().subscribe(posts => this.posts = posts.filter(p => {
-          if (this.user) return p.idUsers == this.user.id
-          else return false
-        }));
+        if (this.user.admin) {
+          this.postService.getPosts().subscribe(posts => this.posts = posts);
+        }
+        else {
+          this.postService.getPosts().subscribe(posts => this.posts = posts.filter(p =>
+            p.idUsers == this.user.id));
+        }
+
+        this.formControlEmail.setValue(this.user.email);
+        this.formControlUsername.setValue(this.user.username);
 
       }
 
@@ -106,7 +126,14 @@ export class ProfileComponent implements OnInit{
       this.newCategoryMessageClass = res.alert;
     });
 
-    this.editUserForm = this.formService.getUserForm();
+    this.editUserForm.valueChanges.subscribe(res => {
+      this.editUserEmailMessage = this.formService.getEmailMessage(this.editUserForm, res);
+    });
+
+    this.userService.userEditedEmmiter.subscribe(res => {
+      this.editUserMessageSuccess = res;
+      this.editUserMessageError = '';
+    });
 
   }
 
@@ -151,7 +178,7 @@ export class ProfileComponent implements OnInit{
   resetEditUsers() {
     this.editingUsers = [];
     this.users.forEach(u => this.editingUsers.push({...u}));
-    this.showSaveChanges = false;
+    this.showSaveChangesForAdmin = false;
   }
 
   removePost(postId : number) {
@@ -194,7 +221,7 @@ export class ProfileComponent implements OnInit{
     this.newCategoryMessageClass = '';
   }
 
-  getUsernameById(id : number) {
+  getUsernameById(id : number) : string {
     let user = this.userService.getUser(id);
     if (user) return user.username;
     else return "Nevažeći id";
@@ -202,7 +229,23 @@ export class ProfileComponent implements OnInit{
 
   onEditUserSubmit() {
 
-    this.editUserMessage = this.formService.formCheck(this.editUserForm, false);
+    this.editUserMessageError = this.formService.formCheck(this.editUserForm, false);
+    if (this.editUserMessageError != '') {
+      this.editUserMessageSuccess = '';
+    }
 
   }
+
+  checkIfValid(form:FormGroup, name:string) : string {
+    return this.formService.checkIfValid(form, name, this.editUserReadonly);
+  }
+
+  cancelUserEdit() {
+    this.editUserReadonly = true;
+    this.formControlEmail.setValue(this.user.email);
+    this.formControlUsername.setValue(this.user.username);
+    this.editUserMessageSuccess = "";
+    this.editUserMessageError = "";
+  }
+
 }

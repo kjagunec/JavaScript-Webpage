@@ -1,35 +1,45 @@
 <div class="container-md">
-  <h1 class="mt-5">{{user?.username}} korisnički račun</h1>
-  <h3 class="text-center">Registracija</h3>
-  <form (submit)="onRegisterSubmit()" [formGroup]="registerForm">
+  <h1 class="my-5 text-center">{{user.username}} korisnički račun</h1>
+  <h2 class="mb-3">Korisnički podaci</h2>
+  <form class="border-bottom pb-3 mb-5" (submit)="onEditUserSubmit()" [formGroup]="editUserForm">
     <div class="form-floating mb-3">
-      <input type="email" class="form-control" [ngClass]="checkIfValid(registerForm, 'email')" formControlName="email" id="registerEmail" placeholder="name@example.com">
-      <label for="registerEmail">E-Mail adresa</label>
-      <div class="invalid-feedback">{{registerEmailMessage}}</div>
+      <input type="email" [formControl]="formControlEmail" [ngClass]="checkIfValid(editUserForm, 'email')"
+             formControlName="email" id="editEmail" placeholder="name@example.com">
+      <label for="editEmail">E-Mail adresa</label>
+      <div class="invalid-feedback" *ngIf="editUserEmailMessage != ''">{{editUserEmailMessage}}</div>
     </div>
-    <div class="form-floating mb-3">
-      <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password1')" formControlName="password1" id="registerPassword1" placeholder="Password">
-      <label for="registerPassword1">Lozinka</label>
+    <div class="form-floating mb-3" *ngIf="!editUserReadonly">
+      <input type="password" [ngClass]="checkIfValid(editUserForm, 'password1')"
+             formControlName="password1" id="editPassword1" placeholder="Password">
+      <label for="editPassword1">Nova lozinka</label>
+      <div class="invalid-feedback">Obavezno polje!</div>
+    </div>
+    <div class="form-floating mb-3" *ngIf="!editUserReadonly">
+      <input type="password" [ngClass]="checkIfValid(editUserForm, 'password2')"
+             formControlName="password2" id="editPassword2" placeholder="Password">
+      <label for="editPassword2">Ponovi novu lozinku</label>
       <div class="invalid-feedback">Obavezno polje!</div>
     </div>
     <div class="form-floating mb-3">
-      <input type="password" class="form-control" [ngClass]="checkIfValid(registerForm, 'password2')" formControlName="password2" id="registerPassword2" placeholder="Password">
-      <label for="registerPassword2">Ponovi lozinku</label>
+      <input type="text" [ngClass]="checkIfValid(editUserForm, 'username')"
+             formControlName="username" id="editUsername" placeholder="Username">
+      <label for="editUsername">Korisničko ime</label>
       <div class="invalid-feedback">Obavezno polje!</div>
     </div>
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" [ngClass]="checkIfValid(registerForm, 'username')" formControlName="username" id="registerUsername" placeholder="Username">
-      <label for="registerUsername">Korisničko ime</label>
-      <div class="invalid-feedback">Obavezno polje!</div>
+    <div *ngIf="editUserMessageError != ''" class="alert alert-danger" role="alert">{{editUserMessageError}}</div>
+    <div *ngIf="editUserMessageSuccess != ''" class="alert alert-success" role="alert">{{editUserMessageSuccess}}</div>
+    <div class="d-flex justify-content-end" *ngIf="!editUserReadonly">
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="cancelUserEdit()">Odustani</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!editUserForm.valid">Spremi promjene</button>
     </div>
-    <div *ngIf="registerErrorMessage != ''" class="alert alert-danger" role="alert">{{registerErrorMessage}}</div>
-    <div *ngIf="registerSuccessMessage != ''" class="alert alert-success" role="alert">{{registerSuccessMessage}}</div>
-    <button type="submit" class="btn btn-secondary" [disabled]="!registerForm.valid">Registriraj se</button>
+    <button type="button" class="btn btn-secondary" (click)="editUserReadonly=false" *ngIf="editUserReadonly">Promijeni podatke</button>
   </form>
-  <div class="accordion accordion-flush mt-3 mb-5">
+  <div class="accordion accordion-flush border-bottom mb-5">
+    <h2 class="mb-3">Uredi</h2>
     <section class="accordion-item">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePosts" aria-expanded="false" aria-controls="flush-collapsePosts">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapsePosts" aria-expanded="false" aria-controls="flush-collapsePosts">
           Novosti
         </button>
       </h2>
@@ -41,7 +51,8 @@
             <div class="card-body">
               <h5 class="card-title">{{p.title}}</h5>
               <p class="card-text" *ngIf="isAdmin()">Korisnik: {{getUsernameById(p.idUsers)}}</p>
-              <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)" *ngIf="isAdmin()">Uredi</button>
+              <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalPost" (click)="editPost(p)"
+                      *ngIf="isAdmin()">Uredi</button>
               <button type="button" class="btn btn-danger ms-2" (click)="removePost(p.id)" *ngIf="isAdmin()">Ukloni</button>
             </div>
           </div>
@@ -50,7 +61,8 @@
     </section>
     <section class="accordion-item" *ngIf="isAdmin()">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseProducts" aria-expanded="false" aria-controls="flush-collapseProducts">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseProducts" aria-expanded="false" aria-controls="flush-collapseProducts">
           Proizvodi
         </button>
       </h2>
@@ -59,7 +71,8 @@
           <img src="{{p.picture}}" class="card-img-top" alt="Slika proizvoda">
           <div class="card-body">
             <h5 class="card-title text-center">{{p.name}}</h5>
-            <button class="btn btn-warning mt-1" data-bs-toggle="modal" data-bs-target="#modalProduct" (click)="editProduct(p)">Uredi</button>
+            <button class="btn btn-warning mt-1" data-bs-toggle="modal" data-bs-target="#modalProduct"
+                    (click)="editProduct(p)">Uredi</button>
             <button type="button" class="btn btn-danger ms-2" (click)="removeProduct(p.id)">Ukloni</button>
           </div>
         </article>
@@ -67,68 +80,83 @@
     </section>
     <section class="accordion-item" *ngIf="isAdmin()">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseCategories" aria-expanded="false" aria-controls="flush-collapseCategories">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseCategories" aria-expanded="false" aria-controls="flush-collapseCategories">
           Kategorije
         </button>
       </h2>
       <div id="flush-collapseCategories" class="accordion-collapse collapse">
         <ul class="list-group list-group-flush accordion-body">
           <li class="list-group-item" *ngFor="let c of categories">
-            <input type="text" class="form-control mb-2" *ngIf="editingCategory.id == c.id; else noEdit" [(ngModel)]="editingCategory.name" id="editingCategoryName" placeholder="ime kategorije" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control mb-2" *ngIf="editingCategory.id == c.id; else noEdit"
+                   [(ngModel)]="editingCategory.name" id="editingCategoryName" placeholder="ime kategorije" [ngModelOptions]="{standalone: true}">
             <ng-template #noEdit>{{c.name}}</ng-template>
-            <button type="button" class="btn btn-warning ms-3" *ngIf="editingCategory.id == 0" (click)="editCategory(c)">Uredi</button>
-            <button type="button" class="btn btn-primary" *ngIf="editingCategory.id == c.id" (click)="saveEditCategory()">Spremi</button>
-            <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="editingCategory.id == c.id" (click)="resetCategory()">Otkaži</button>
+            <button type="button" class="btn btn-warning ms-3" *ngIf="editingCategory.id == 0"
+                    (click)="editCategory(c)">Uredi</button>
+            <button type="button" class="btn btn-primary" *ngIf="editingCategory.id == c.id"
+                    (click)="saveEditCategory()">Spremi</button>
+            <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="editingCategory.id == c.id"
+                    (click)="resetCategory()">Otkaži</button>
           </li>
         </ul>
       </div>
     </section>
     <section class="accordion-item" *ngIf="isAdmin()">
       <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseUsers" aria-expanded="false" aria-controls="flush-collapseUsers">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseUsers" aria-expanded="false" aria-controls="flush-collapseUsers">
           Korisnici
         </button>
       </h2>
-      <div id="flush-collapseUsers" class="accordion-collapse collapse">
+      <div id="flush-collapseUsers" class="accordion-collapse collapse pb-3">
         <ul class="list-group list-group-flush accordion-body">
           <li class="list-group-item d-flex" *ngFor="let u of editingUsers; index as i">
             <div>{{u.username}}</div>
             <div class="form-check ms-3">
-              <input class="form-check-input" type="checkbox" (click)="showSaveChanges=true" [(ngModel)]="u.admin" id="adminCheckbox{{i}}">
+              <input class="form-check-input" type="checkbox" (click)="showSaveChangesForAdmin=true"
+                     [(ngModel)]="u.admin" id="adminCheckbox{{i}}">
               <label class="form-check-label" for="adminCheckbox{{i}}">
                 Admin ovlasti
               </label>
             </div>
           </li>
         </ul>
-        <button type="button" class="btn btn-primary" *ngIf="showSaveChanges" (click)="saveEditUsers()">Spremi</button>
-        <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="showSaveChanges" (click)="resetEditUsers()">Otkaži</button>
+        <button type="button" class="btn btn-primary" *ngIf="showSaveChangesForAdmin"
+                (click)="saveEditUsers()">Spremi</button>
+        <button type="button" class="btn btn-outline-secondary ms-2" *ngIf="showSaveChangesForAdmin"
+                (click)="resetEditUsers()">Otkaži</button>
       </div>
     </section>
   </div>
-  <h1 *ngIf="isAdmin()" class="mt-5">Dodaj</h1>
+  <h2 *ngIf="isAdmin()" class="mb-3">Dodaj</h2>
   <div *ngIf="isAdmin()" class="btn-group my-3" role="group">
-    <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewProduct=false" name="btnradio" id="btnradioPost" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewPost=true; showNewCategory=false; showNewProduct=false"
+           name="btnradio" id="btnradioPost" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioPost">Novost</label>
 
-    <input type="radio" class="btn-check" (change)="showNewProduct=true; showNewPost=false; showNewCategory=false" name="btnradio" id="btnradioProduct" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewProduct=true; showNewPost=false; showNewCategory=false"
+           name="btnradio" id="btnradioProduct" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioProduct">Proizvod</label>
 
-    <input type="radio" class="btn-check" (change)="showNewCategory=true; showNewProduct=false; showNewPost=false" name="btnradio" id="btnradioCategory" autocomplete="off">
+    <input type="radio" class="btn-check" (change)="showNewCategory=true; showNewProduct=false; showNewPost=false"
+           name="btnradio" id="btnradioCategory" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradioCategory">Kategorija</label>
   </div>
 
   <form class="mb-3" *ngIf="showNewPost">
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newPost.picture" id="newPostPictureUrl" placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
+      <input type="text" class="form-control" [(ngModel)]="newPost.picture" id="newPostPictureUrl"
+             placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
       <label for="newPostPictureUrl">Link na sliku</label>
     </div>
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newPost.title" id="newPostTitle" placeholder="postTitle" [ngModelOptions]="{standalone: true}">
+      <input type="text" class="form-control" [(ngModel)]="newPost.title" id="newPostTitle"
+             placeholder="postTitle" [ngModelOptions]="{standalone: true}">
       <label for="newPostTitle">Naslov objave</label>
     </div>
     <div class="form-floating mt-3">
-      <textarea type="text" class="form-control" [(ngModel)]="newPost.text" id="newPostText" placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
+      <textarea type="text" class="form-control" [(ngModel)]="newPost.text" id="newPostText"
+                placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
       <label for="newPostText">Tekst objave</label>
     </div>
     <div class="d-flex justify-content-center mt-3">
@@ -143,11 +171,13 @@
 
   <form class="mb-3" *ngIf="showNewProduct">
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newProduct.picture" id="newProductPictureUrl" placeholder="newProductPictureUrl" [ngModelOptions]="{standalone: true}">
+      <input type="text" class="form-control" [(ngModel)]="newProduct.picture" id="newProductPictureUrl"
+             placeholder="newProductPictureUrl" [ngModelOptions]="{standalone: true}">
       <label for="newProductPictureUrl">Link na sliku</label>
     </div>
     <div class="form-floating mt-3">
-      <input type="text" class="form-control" [(ngModel)]="newProduct.name" id="newProductName" placeholder="newProductName" [ngModelOptions]="{standalone: true}">
+      <input type="text" class="form-control" [(ngModel)]="newProduct.name" id="newProductName"
+             placeholder="newProductName" [ngModelOptions]="{standalone: true}">
       <label for="newProductName">Ime proizvoda</label>
     </div>
     <div class="form-floating mt-3">
@@ -168,7 +198,8 @@
 
   <form class="mb-3" *ngIf="showNewCategory">
     <div class="form-floating my-3">
-      <input type="text" class="form-control" [(ngModel)]="newCategory.name" id="newCategoryName" placeholder="newCategoryName" [ngModelOptions]="{standalone: true}">
+      <input type="text" class="form-control" [(ngModel)]="newCategory.name" id="newCategoryName"
+             placeholder="newCategoryName" [ngModelOptions]="{standalone: true}">
       <label for="newCategoryName">Ime kategorije</label>
     </div>
     <div class="d-flex justify-content-end">
@@ -179,7 +210,8 @@
   </form>
 
   <!-- Modals -->
-  <form class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalPostLabel" aria-hidden="true">
+  <form class="modal fade" id="modalPost" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalPostLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -189,15 +221,18 @@
         <div class="modal-body">
           <img class="img-fluid" src="{{editingPost.picture}}" alt="Slika objave nije važeća">
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl" placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.picture" id="postPictureUrl"
+                   placeholder="postPictureUrl" [ngModelOptions]="{standalone: true}">
             <label for="postPictureUrl">Link na sliku</label>
           </div>
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingPost.title" id="postTitle" placeholder="postTitle" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control" [(ngModel)]="editingPost.title" id="postTitle"
+                   placeholder="postTitle" [ngModelOptions]="{standalone: true}">
             <label for="postTitle">Naslov objave</label>
           </div>
           <div class="form-floating mt-3">
-            <textarea type="text" class="form-control" [(ngModel)]="editingPost.text" id="postText" placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
+            <textarea type="text" class="form-control" [(ngModel)]="editingPost.text" id="postText"
+                      placeholder="postText" [ngModelOptions]="{standalone: true}"></textarea>
             <label for="postText">Tekst objave</label>
           </div>
         </div>
@@ -209,7 +244,8 @@
     </div>
   </form>
 
-  <form class="modal fade" id="modalProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true">
+  <form class="modal fade" id="modalProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalProductLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -219,15 +255,18 @@
         <div class="modal-body">
           <img class="img-fluid" src="{{editingProduct.picture}}" alt="Slika proizvoda nije važeća">
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingProduct.picture" id="productPictureUrl" placeholder="productPictureUrl" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control" [(ngModel)]="editingProduct.picture" id="productPictureUrl"
+                   placeholder="productPictureUrl" [ngModelOptions]="{standalone: true}">
             <label for="productPictureUrl">Link na sliku</label>
           </div>
           <div class="form-floating mt-3">
-            <input type="text" class="form-control" [(ngModel)]="editingProduct.name" id="editingProductName" placeholder="editingProductName" [ngModelOptions]="{standalone: true}">
+            <input type="text" class="form-control" [(ngModel)]="editingProduct.name" id="editingProductName"
+                   placeholder="editingProductName" [ngModelOptions]="{standalone: true}">
             <label for="editingProductName">Ime proizvoda</label>
           </div>
           <div class="form-floating mt-3">
-            <select class="form-select" [(ngModel)]="editingProduct.idCategories" id="categorySelectforEdit" [ngModelOptions]="{standalone: true}">
+            <select class="form-select" [(ngModel)]="editingProduct.idCategories" id="categorySelectforEdit"
+                    [ngModelOptions]="{standalone: true}">
               <option *ngFor="let c of categories" value="{{c.id}}">{{c.name}}</option>
             </select>
             <label for="categorySelectforEdit">Kategorija proizvoda</label>

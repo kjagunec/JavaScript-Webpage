@@ -5,19 +5,20 @@ import {environment} from "../../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {NavbarService} from "../../shared/services/navbar.service";
+import {UserService} from "../../shared/services/user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private user : User | null = null;
+  private user : User = new User();
   private token?  : string | null;
   private authUrl : string = environment.API_URL + '/authenticate';
   errorEmitter : Subject<string> = new Subject<string>();
-  userChange : BehaviorSubject<User | null> = new BehaviorSubject<User | null>(this.user);
+  userChange : Subject<User> = new Subject<User>();
 
-  constructor(private httpClient:HttpClient, private router:Router, private navbarService:NavbarService) { }
+  constructor(private httpClient:HttpClient, private router:Router) { }
 
   login(credentials : {email:string, password:string}) {
 
@@ -35,6 +36,7 @@ export class AuthService {
       } else {
 
         this.errorEmitter.next(res.status);
+        console.log(res.status);
 
       }
 
@@ -43,18 +45,16 @@ export class AuthService {
 
   logout() {
 
-    this.user = null;
+    this.user = new User();
     this.token = null;
     sessionStorage.removeItem('token');
-    this.userChange.next(null);
+    this.userChange.next(this.user);
+    this.router.navigate(['']);
 
   }
 
-  getUser() : User | null {
-
-    if (this.user) return {...this.user}
-    else return null;
-
+  getUser() : User {
+    return {...this.user}
   }
 
   getToken() {
@@ -68,12 +68,11 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    return this.user != null;
+    return this.user.id != 0;
   }
 
   isAdmin() {
-    if (this.user) return this.user.admin
-    else return false
+    return this.user.admin;
   }
 
   whoAmI() {

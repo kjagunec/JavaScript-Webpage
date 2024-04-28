@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 import {AuthService} from "./auth/auth.service";
 import {UserService} from "../shared/services/user.service";
 import {User} from "../shared/models/user.model";
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit{
 
     this.loginForm = this.formService.getLoginForm();
 
-    this.registerForm = this.formService.getUserForm();
+    this.registerForm = this.formService.getRegisterForm();
 
     this.authService.errorEmitter.subscribe((message : string) => {
       this.loginErrorMessage = message;
@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit{
 
     this.userService.errorEmmiter.subscribe((message : string) => {
       this.registerErrorMessage = message;
+      this.registerSuccessMessage = '';
     });
 
     this.userService.newUserAddedEmmiter.subscribe((message : string) => {
@@ -69,8 +70,6 @@ export class LoginComponent implements OnInit{
 
     this.authService.login(credentials);
 
-    console.log('login submit');
-
   }
 
   onRegisterSubmit() {
@@ -81,7 +80,7 @@ export class LoginComponent implements OnInit{
 
   checkIfValid(form:FormGroup, name:string) : string {
 
-    return this.formService.checkIfValid(form, name);
+    return this.formService.checkIfValid(form, name, false);
 
   }
 }

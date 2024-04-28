@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {User} from "../models/user.model";
 import {DataService} from "./data.service";
+import {AuthService} from "../../login/auth/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,9 @@ export class UserService {
   private userSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   errorEmmiter : Subject<string> = new Subject<string>();
   newUserAddedEmmiter : Subject<string> = new Subject<string>();
+  userEditedEmmiter : Subject<string> = new Subject<string>();
 
-  constructor(private dataService : DataService) {
+  constructor(private dataService : DataService, private authService : AuthService) {
     this.refreshUsers();
   }
 
@@ -61,12 +63,25 @@ export class UserService {
   }
 
   editUsers(users : User[]) {
-    users.forEach(u => this.editUser(u))
+    users.forEach(u => {
+      this.dataService.editUser(u).subscribe(res => {
+        if (res.status == 'OK') {
+          this.refreshUsers();
+        }
+        else {
+          console.log(res.status);
+        }
+      })
+    })
   }
 
-  editUser(user : User) {
+  editCurrentUser(user : User) {
     this.dataService.editUser(user).subscribe(res => {
-      if (res.status == 'OK') this.refreshUsers();
+      if (res.status == 'OK') {
+        this.userEditedEmmiter.next('Promjene spremljene!');
+        this.refreshUsers();
+        this.authService.logout();
+      }
       else console.log(res.status);
     })
   }
