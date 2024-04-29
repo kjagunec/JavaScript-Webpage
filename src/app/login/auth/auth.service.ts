@@ -15,10 +15,13 @@ export class AuthService {
   private user : User = new User();
   private token?  : string | null;
   private authUrl : string = environment.API_URL + '/authenticate';
+  private currentRoute : string = "";
   errorEmitter : Subject<string> = new Subject<string>();
   userChange : Subject<User> = new Subject<User>();
 
-  constructor(private httpClient:HttpClient, private router:Router) { }
+  constructor(private httpClient:HttpClient, private router:Router, private navbarService:NavbarService) {
+    this.navbarService.getCurrentRoute().subscribe(res => this.currentRoute = res);
+  }
 
   login(credentials : {email:string, password:string}) {
 
@@ -49,7 +52,10 @@ export class AuthService {
     this.token = null;
     sessionStorage.removeItem('token');
     this.userChange.next(this.user);
-    this.router.navigate(['']);
+
+    if (this.currentRoute === '/profile') {
+      this.router.navigate(['login']);
+    }
 
   }
 
@@ -89,16 +95,9 @@ export class AuthService {
 
           }
 
+        } else {
+          console.log(res.status);
         }
-        /*else if (res.status == 'Wrong token') {
-
-          this.navbarService.getCurrentRoute().subscribe(route => {
-            if (route == '/profile') this.router.navigate(['']);
-            this.navbarService.getCurrentRoute().unsubscribe();
-          });
-          this.navbarService.checkCurrentRoute();
-
-        }*/ else console.log(res.status);
 
       })
     }

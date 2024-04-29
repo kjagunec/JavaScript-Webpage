@@ -15,7 +15,7 @@ export class UserService {
   newUserAddedEmmiter : Subject<string> = new Subject<string>();
   userEditedEmmiter : Subject<string> = new Subject<string>();
 
-  constructor(private dataService : DataService, private authService : AuthService) {
+  constructor(private dataService:DataService, private authService:AuthService) {
     this.refreshUsers();
   }
 

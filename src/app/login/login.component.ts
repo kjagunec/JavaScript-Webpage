@@ -27,15 +27,16 @@ export class LoginComponent implements OnInit{
   constructor(private authService : AuthService,
               private userService : UserService,
               private navbar : NavbarService,
-              private formService : FormService) {}
+              private formService : FormService) {
+
+    this.loginForm = this.formService.getLoginForm();
+    this.registerForm = this.formService.getRegisterForm();
+
+  }
 
   ngOnInit() {
 
     this.navbar.checkCurrentRoute();
-
-    this.loginForm = this.formService.getLoginForm();
-
-    this.registerForm = this.formService.getRegisterForm();
 
     this.authService.errorEmitter.subscribe((message : string) => {
       this.loginErrorMessage = message;

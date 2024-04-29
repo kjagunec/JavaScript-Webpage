@@ -33,7 +33,7 @@
           <ul class="dropdown-menu bg-primary-subtle">
             <li><a class="dropdown-item" [routerLink]="['profile']">Moj korisnički račun</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" [routerLink]="['']" (click)="logout()">Odjava</a></li>
+            <li><a class="dropdown-item text-danger" (click)="logout()">Odjava</a></li>
           </ul>
         </li>
         <ng-template #noUser>
