@@ -1,44 +1,20 @@
 <section class="container-md">
   <h1 class="text-center my-5">Proizvodi</h1>
   <div class="btn-group d-flex mx-md-5 mb-4" role="group">
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio1">Mlijeko</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio2">Vrhnja</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio3">Maslac, kajmaci i namazi</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio4">Sirutka i mlaćenica</label>
-
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio5">Svi proizvodi</label>
+    <input type="radio" class="btn-check" (change)="changeSelectedCategory(0)"
+           [checked]="selectedCategoryId == 0" name="btnradio" id="btnradio0" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio0">Svi proizvodi</label>
+    @for (category of categories; track category; let index = $index) {
+      <input type="radio" class="btn-check" (change)="changeSelectedCategory(category.id)"
+      [checked]="selectedCategoryId == category.id" name="btnradio" id="btnradio{{index + 1}}" autocomplete="off">
+      <label class="btn btn-outline-primary" for="btnradio{{index + 1}}">{{category.name}}</label>
+    }
   </div>
   <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2">
-    <article class="col card border-0">
-      <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
+    <article class="col card border-0" *ngFor="let product of filteredProducts">
+      <img src="{{product.picture}}" class="card-img-top" alt="slika proizvoda">
       <div class="card-body">
-        <h5 class="card-title text-center">Special title treatment</h5>
-      </div>
-    </article>
-    <article class="col card border-0">
-      <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-      <div class="card-body">
-        <h5 class="card-title text-center">Special title treatment</h5>
-      </div>
-    </article>
-    <article class="col card border-0">
-      <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-      <div class="card-body">
-        <h5 class="card-title text-center">Special title treatment</h5>
-      </div>
-    </article>
-    <article class="col card border-0">
-      <img src="https://picsum.photos/200" class="card-img-top" alt="stock photo">
-      <div class="card-body">
-        <h5 class="card-title text-center">Special title treatment</h5>
+        <h5 class="card-title text-center">{{product.name}}</h5>
       </div>
     </article>
   </div>

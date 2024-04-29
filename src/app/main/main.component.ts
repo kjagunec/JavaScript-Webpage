@@ -5,6 +5,7 @@ import {PostService} from "../shared/services/post.service";
 import {NavbarService} from "../shared/services/navbar.service";
 import {Category} from "../shared/models/category.model";
 import {CategoryService} from "../shared/services/category.service";
+import {ProductService} from "../shared/services/product.service";
 
 @Component({
   selector: 'app-main',
@@ -15,32 +16,28 @@ export class MainComponent implements OnInit {
 
   posts : Post[] = [];
   categories : Category[] = [];
-  products : Product[] = [];
+  allProducts : Product[] = [];
+  filteredProducts : Product[] = [];
+  selectedCategoryId: number = 0;
 
-  constructor(private postService:PostService, private categoryService:CategoryService, private navbar:NavbarService) { }
+  constructor(private postService:PostService,
+              private categoryService:CategoryService,
+              private navbarService:NavbarService,
+              private productService:ProductService) { }
 
   ngOnInit(): void {
+    this.navbarService.checkCurrentRoute();
+
     this.postService.getPosts().subscribe((res : Post[]) => this.posts = res);
 
-    this.categoryService.getCategories().subscribe((res : Category[]) => this.categories = res);
+    this.categoryService.getCategories().subscribe(categories => this.categories = categories);
+    this.categoryService.getSelectedCategoryId().subscribe(id => this.selectedCategoryId = id);
 
-    this.navbar.checkCurrentRoute();
-
-    let product : Product = new Product();
-
-    product.name = "Jogurt";
-    product.picture = "https://static5.depositphotos.com/1016154/461/i/950/depositphotos_4616605-stock-photo-yogurt.jpg";
-    this.products.push(product);
-
-    product = new Product();
-    product.name = "Mlijeko";
-    product.picture = "https://media.gettyimages.com/id/594838587/photo/glass-of-milk.jpg?s=2048x2048&w=gi&k=20&c=kp71uhU_Uenr2Ox8k0c630pNqw-M6Bp3DnAvw_fl3o4=";
-    this.products.push(product);
-
-    product = new Product();
-    product.name = "Sir";
-    product.picture = "https://media.gettyimages.com/id/859268416/photo/cheese-chunk-isolated-on-white-background.jpg?s=2048x2048&w=gi&k=20&c=eJE-0duhWEh2THMUc2Pw7jUmOMl2fn-4g3ZXb0KlJFI=";
-    this.products.push(product);
+    this.productService.getProducts().subscribe(products => this.allProducts = products);
+    this.productService.getFilteredProducts().subscribe(products => this.filteredProducts = products);
   }
 
+  changeSelectedCategory(id: number) {
+    this.categoryService.changeSelectedCategory(id);
+  }
 }

@@ -2,32 +2,57 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Product} from "../models/product.model";
-import {Post} from "../models/post.model";
+import {CategoryService} from "./category.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private products : Product[] = [];
-  private productSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+  private filteredProducts : Product[] = [];
+  private allProducts : Product[] = [];
+  private allProductsSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(this.allProducts);
+  private filteredProductsSubject : BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(this.filteredProducts);
   addProductEmmiter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
-  constructor(private dataService : DataService) {
+  constructor(private dataService:DataService, private categoryService:CategoryService) {
     this.refreshProducts();
+
+    this.categoryService.getSelectedCategoryId().subscribe(id => {
+
+      if (id != 0) {
+        this.filteredProducts = this.allProducts.filter(p => p.idCategories == id);
+      } else {
+        this.filteredProducts = [...this.allProducts];
+      }
+      this.filteredProductsSubject.next([...this.filteredProducts]);
+
+    });
   }
 
   refreshProducts() {
     this.dataService.getProducts().subscribe((res : {status:string, rows:Product[]}) => {
       if (res.status == 'OK') {
-        this.products = res.rows;
-        this.productSubject.next([...this.products]);
-      } else console.log(res.status);
+
+        this.allProducts = res.rows;
+        this.allProductsSubject.next([...this.allProducts]);
+
+        let categoryId : number = this.categoryService.getSelectedCategoryId().value;
+        if (categoryId != 0) {
+          this.filteredProducts = this.allProducts.filter(p => p.idCategories == categoryId);
+        } else {
+          this.filteredProducts = [...this.allProducts];
+        }
+        this.filteredProductsSubject.next([...this.filteredProducts]);
+
+      } else {
+        console.log(res.status);
+      }
     })
   }
 
   getProducts() : BehaviorSubject<Product[]> {
-    return this.productSubject;
+    return this.allProductsSubject;
   }
 
   addProduct(product : Product) {
@@ -44,7 +69,7 @@ export class ProductService {
   }
 
   getProduct(productId : number) : Product | undefined {
-    return this.products.find((p : Product) => p.id == productId);
+    return this.allProducts.find((p : Product) => p.id == productId);
   }
 
   deleteProduct(productId : number) {
@@ -59,5 +84,9 @@ export class ProductService {
       if (res.status == 'OK') this.refreshProducts();
       else console.log(res.status);
     })
+  }
+
+  getFilteredProducts() : BehaviorSubject<Product[]> {
+    return this.filteredProductsSubject;
   }
 }

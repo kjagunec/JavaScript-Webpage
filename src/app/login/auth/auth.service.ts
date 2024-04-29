@@ -17,7 +17,7 @@ export class AuthService {
   private authUrl : string = environment.API_URL + '/authenticate';
   private currentRoute : string = "";
   errorEmitter : Subject<string> = new Subject<string>();
-  userChange : Subject<User> = new Subject<User>();
+  userChange : BehaviorSubject<User> = new BehaviorSubject<User>(this.user);
 
   constructor(private httpClient:HttpClient, private router:Router, private navbarService:NavbarService) {
     this.navbarService.getCurrentRoute().subscribe(res => this.currentRoute = res);

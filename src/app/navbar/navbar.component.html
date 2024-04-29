@@ -17,12 +17,10 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" [ngClass]="currentRoute == '/products' ? 'active' : ''" role="button" data-bs-toggle="dropdown" aria-expanded="false">Proizvodi</a>
           <ul class="dropdown-menu bg-primary-subtle">
-            <li><a class="dropdown-item" [routerLink]="['products']">Svi proizvodi</a></li>
+            <li><a class="dropdown-item" [routerLink]="['products']" (click)="changeSelectedCategory(0)">Svi proizvodi</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" [routerLink]="['products']">Mlijeko</a></li>
-            <li><a class="dropdown-item" [routerLink]="['products']">Vrhnja</a></li>
-            <li><a class="dropdown-item" [routerLink]="['products']">Maslac, kajmaci i namazi</a></li>
-            <li><a class="dropdown-item" [routerLink]="['products']">Sirutka i mlaćenica</a></li>
+            <li *ngFor="let category of categories"><a class="dropdown-item" [routerLink]="['products']"
+                                                       (click)="changeSelectedCategory(category.id)">{{category.name}}</a></li>
           </ul>
         </li>
         <li class="nav-item">

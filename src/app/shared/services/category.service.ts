@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Category} from "../models/category.model";
-import {Post} from "../models/post.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +10,7 @@ export class CategoryService {
 
   private categories : Category[] = [];
   private categorySubject : BehaviorSubject<Category[]> = new BehaviorSubject<Category[]>([]);
+  private selectedCategoryIdSubject : BehaviorSubject<number> = new BehaviorSubject<number>(0);
   addCategoryEmitter : Subject<{message:string, alert:string}> = new Subject<{message:string, alert:string}>();
 
   constructor(private dataService : DataService) {
@@ -59,5 +59,13 @@ export class CategoryService {
       if (res.status == 'OK') this.refreshCategories();
       else console.log(res.status);
     })
+  }
+
+  changeSelectedCategory(id : number) {
+    this.selectedCategoryIdSubject.next(id);
+  }
+
+  getSelectedCategoryId() : BehaviorSubject<number> {
+    return this.selectedCategoryIdSubject
   }
 }
