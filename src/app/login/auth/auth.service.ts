@@ -5,7 +5,6 @@ import {environment} from "../../../environments/environment.development";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {NavbarService} from "../../shared/services/navbar.service";
-import {UserService} from "../../shared/services/user.service";
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +96,7 @@ export class AuthService {
 
         } else {
           console.log(res.status);
+          this.router.navigate(['']);
         }
 
       })
