@@ -1,7 +1,7 @@
 <section class="container-md">
   <h1 class="text-center my-5">Novosti</h1>
   <div class="row row-cols-1 row-cols-lg-4 row-cols-md-2">
-    <article class="col card border-0" *ngFor="let p of posts">
+    <article class="col card border-0" *ngFor="let p of posts | invert">
       <a routerLink="/post/{{p.id}}">
         <img src="{{p.picture}}" class="card-img-top" alt="Slika novosti">
       </a>
